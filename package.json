@@ -1,6 +1,6 @@
 {
   "name": "bedrock-web-session",
-  "version": "1.0.0",
+  "version": "1.0.1-0",
   "description": "Session management for Bedrock Web Apps",
   "main": "index.js",
   "dependencies": {
