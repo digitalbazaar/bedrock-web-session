@@ -18,13 +18,15 @@ export class SessionService {
 
   async get({url = this.config.urls.base} = {}) {
     if(this._getPending) {
-      return this._getPending;
+      const response = await this._getPending;
+      return response.data;
     }
     // store pending session result so concurrent requests will reuse the
     // result instead of spamming the server
     this._getPending = axios.get(url);
     try {
-      return await this._getPending;
+      const response = await this._getPending;
+      return response.data;
     } finally {
       this._getPending = null;
     }
