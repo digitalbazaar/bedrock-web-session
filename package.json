@@ -1,0 +1,21 @@
+{
+  "name": "bedrock-web-session",
+  "version": "0.0.1-0",
+  "description": "Session management for Bedrock Web Apps",
+  "main": "index.js",
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/digitalbazaar/bedrock-web-session"
+  },
+  "bedrock": {
+    "browserDependencies": "all",
+    "manifest": {
+      "axios": {
+        "main": "dist/axios.min.js"
+      }
+    }
+  }
+}
