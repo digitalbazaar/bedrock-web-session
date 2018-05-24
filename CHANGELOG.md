@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-## 0.1.0 - 2018-xx-xx
+## 0.1.0 - 2018-05-24
 
 ### Added
 - Added core files.
