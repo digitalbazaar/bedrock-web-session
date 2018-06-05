@@ -3,18 +3,17 @@
  */
 'use strict';
 
-import Store from 'bedrock-web-store';
+import {store as defaultStore} from 'bedrock-web-store';
 import Session from './Session.js';
+import SessionService from './SessionService.js';
 
-const store = new Store();
-
-export const createSession = () => {
-  const session = new Session();
-  const data = store.set(session);
-  return data;
+export const getSession = async (
+  {id = 'session.default', store = defaultStore} = {}) => {
+  let session = await store.get({id});
+  if(session === undefined) {
+    session = new Session({service: SessionService});
+    await store.create({id, object: session});
+    await session.refresh();
+  }
+  return session;
 };
-
-export const getSession = () => {
-  return store.get();
-};
-
