@@ -4,7 +4,8 @@
   "description": "Session management for Bedrock Web Apps",
   "main": "index.js",
   "dependencies": {
-    "axios": "^0.18.0"
+    "axios": "^0.18.0",
+    "bedrock-web-store": "digitalbazaar/bedrock-web-store#implementation"
   },
   "repository": {
     "type": "git",
