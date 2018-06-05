@@ -3,15 +3,14 @@
  */
 'use strict';
 
-import {Store} from 'bedrock-web-store';
+import Store from 'bedrock-web-store';
 import Session from './Session.js';
 
 const store = new Store();
 
 export const createSession = () => {
   const session = new Session();
-  let data = store.get();
-  data = session;
+  const data = store.set(session);
   return data;
 };
 
