@@ -3,24 +3,17 @@
  */
 'use strict';
 
-import SessionService from './SessionService';
-
 export default class Session {
-  constructor() {
-    this._service = new SessionService();
+  constructor({service}) {
+    this._service = service;
+    this.data = {};
   }
 
   async refresh() {
-    return true;
+    this.data = await this._service.get();
   }
 
-  async get() {
-    const data = await this._service.get();
-    return data;
-  }
-
-  async end() {
-    const success = await this._service.logout();
-    return success;
+  end() {
+    return this._service.logout();
   }
 }
