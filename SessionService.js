@@ -4,6 +4,8 @@
 'use strict';
 
 import axios from 'axios';
+import Session from './Session.js';
+import {store as defaultStore} from 'bedrock-web-store';
 
 export default class SessionService {
   constructor({
@@ -14,6 +16,16 @@ export default class SessionService {
   } = {}) {
     this.config = {urls};
     this._getPending = null;
+  }
+
+  async create({id = 'session.default', store = defaultStore}) {
+    let session = await store.get(id);
+    if(session === undefined) {
+      session = new Session({service: this});
+      await store.create({id, object: session});
+      await session.refresh();
+    }
+    return session;
   }
 
   async get({url = this.config.urls.base} = {}) {
