@@ -3,9 +3,11 @@
  */
 'use strict';
 
+import SessionService from './SessionService.js';
+
 export default class Session {
-  constructor({service}) {
-    this._service = service;
+  constructor() {
+    this._service = new SessionService();
     this.data = {};
   }
 
