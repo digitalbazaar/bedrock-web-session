@@ -8,10 +8,9 @@ npm install bedrock-web-session
 ```
 
 ```js
-import {SessionService} from bedrock-web-session;
+import {getSession} from bedrock-web-session;
 
-const service = new SessionService();
-const session = service.create();
+const session = getSession();
 
 console.log('session data from backend', session.data);
 console.log('session id from backend: ', session.data.id);
