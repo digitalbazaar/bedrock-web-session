@@ -5,7 +5,7 @@
 
 import SessionService from './SessionService';
 
-export class Session {
+export default class Session {
   constructor() {
     this._service = new SessionService();
   }

@@ -5,7 +5,7 @@
 
 import axios from 'axios';
 
-export class SessionService {
+export default class SessionService {
   constructor({
     urls = {
       base: '/session',
