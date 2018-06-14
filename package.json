@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "bedrock-web-store": "^1.1.0"
+    "bedrock-web-store": "^1.1.1"
   },
   "repository": {
     "type": "git",
