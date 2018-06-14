@@ -6,6 +6,8 @@
 import {store as defaultStore} from 'bedrock-web-store';
 import Session from './Session.js';
 
+export {SessionService} from './SessionService.js';
+
 export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
   try {
