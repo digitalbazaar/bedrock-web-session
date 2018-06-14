@@ -10,7 +10,9 @@ export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
   try {
     const session = new Session();
-    return await store.create({id, object: session});
+    await store.create({id, object: session});
+    await session.refresh();
+    return session;
   } catch(e) {
     if(e.name === 'DuplicateError') {
       return store.get({id});

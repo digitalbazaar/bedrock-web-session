@@ -15,7 +15,8 @@ export default class Session {
     this.data = await this._service.get();
   }
 
-  end() {
-    return this._service.logout();
+  async end() {
+    await this._service.logout();
+    await this.refresh();
   }
 }
