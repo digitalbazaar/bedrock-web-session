@@ -17,6 +17,6 @@ async someFunction() {
 
   // ... some time later, refresh the session
 
-  session.refresh();
+  await session.refresh();
 }
 ```
