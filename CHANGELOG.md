@@ -1,10 +1,15 @@
 # bedrock-web-session ChangeLog
 
+## 1.1.0 - 2018-06-14
+
+### Added
+- Add `getSession` API.
+
 ## 1.0.0 - 2018-05-24
 
 ## 0.1.0 - 2018-05-24
 
 ### Added
-- Added core files.
+- Add core files.
 
 - See git history for changes.
