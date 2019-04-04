@@ -1,5 +1,8 @@
 # bedrock-web-session ChangeLog
 
+### Fixed
+- Export bug.
+
 ## 1.1.0 - 2018-06-14
 
 ### Added
