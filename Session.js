@@ -30,7 +30,17 @@ export default class Session {
     // session data changes
     if(authentication || !deepEqual(oldData, newData)) {
       this.data = newData;
-      this._emit('change', {authentication, oldData, newData});
+      try {
+        await this._emit('change', {authentication, oldData, newData});
+      } catch(e) {
+        // could not refresh session, so end it
+        const error = e;
+        try {
+          await this.end();
+        } finally {
+          throw error;
+        }
+      }
     }
   }
 
@@ -59,11 +69,7 @@ export default class Session {
   async _emit(eventType, eventData) {
     const listeners = this._eventTypeListeners.get(eventType);
     for(const handler of listeners.values()) {
-      try {
-        await handler(eventData);
-      } catch(e) {
-        console.error(e);
-      }
+      await handler(eventData);
     }
   }
 }
