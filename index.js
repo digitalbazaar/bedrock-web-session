@@ -8,11 +8,21 @@ import Session from './Session.js';
 
 export {default as SessionService} from './SessionService.js';
 
+export const createSession = async (
+  {id = 'session.default', store = defaultStore} = {}) => {
+  const session = new Session();
+  await store.create({id, object: session});
+  return session;
+};
+
 export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
+  const session = await store.get({id});
+  if(session) {
+    return session;
+  }
   try {
-    const session = new Session();
-    await store.create({id, object: session});
+    const session = await createSession();
     await session.refresh();
     return session;
   } catch(e) {

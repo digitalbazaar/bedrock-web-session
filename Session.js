@@ -7,9 +7,9 @@ import SessionService from './SessionService.js';
 
 export default class Session {
   constructor() {
-    this._service = new SessionService();
     this.data = {};
-    this.eventTypes = new Map([['change', new Map()]]);
+    this._service = new SessionService();
+    this._eventTypeListeners = new Map([['change', new Map()]]);
   }
 
   /**
@@ -40,14 +40,14 @@ export default class Session {
   }
 
   on(eventType, handler) {
-    if(typeof eventName !== 'string') {
+    if(typeof eventType !== 'string') {
       throw new TypeError('"eventType" must be a string.');
     }
     if(typeof handler !== 'function') {
       throw new TypeError('"handler" must be a function.');
     }
 
-    const listeners = this.eventTypes.get(eventType);
+    const listeners = this._eventTypeListeners.get(eventType);
     if(!listeners) {
       throw new Error(`Event "${eventType}" is not supported.`);
     }
@@ -57,7 +57,7 @@ export default class Session {
   }
 
   async _emit(eventType, eventData) {
-    const listeners = this.eventTypes.get(eventType);
+    const listeners = this._eventTypeListeners.get(eventType);
     for(const handler of listeners.values()) {
       try {
         await handler(eventData);
