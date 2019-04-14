@@ -4,6 +4,9 @@
 
 ### Added
 - Add `change` event and API to listen for it.
+- Add `createSession` call to explicitly initialize session. This
+  allows for listeners to be attached prior to a refresh of the
+  session.
 
 ## 1.1.1 - 2019-04-04
 
