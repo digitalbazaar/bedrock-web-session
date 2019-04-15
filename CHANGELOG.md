@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-## 1.2.0 - 2019-xx-xx
+## 1.2.0 - 2019-04-15
 
 ### Added
 - Add `change` event and API to listen for it.
