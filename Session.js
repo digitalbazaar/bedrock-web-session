@@ -50,10 +50,10 @@ export default class Session {
   }
 
   /**
-   * Registers a callback that is executed when an event listener fires.
+   * Registers a handler that is executed when an event listener fires.
    *
    * @param {string} eventType - An event such as change.
-   * @param {function} handler - A callback function called when
+   * @param {function} handler - A handler function called when
    *   an event occurs.
    *
    * @returns {function} A unique function to remover the listener.
