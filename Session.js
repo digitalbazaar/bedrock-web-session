@@ -49,6 +49,15 @@ export default class Session {
     await this.refresh();
   }
 
+  /**
+   * Registers a callback that is executed when an event listener fires.
+   *
+   * @param {string} eventType - An event such as change.
+   * @param {function} handler - A callback function called when
+   *   an event occurs.
+   *
+   * @returns {function} A unique function to remover the listener.
+   */ 
   on(eventType, handler) {
     if(typeof eventType !== 'string') {
       throw new TypeError('"eventType" must be a string.');
@@ -56,14 +65,17 @@ export default class Session {
     if(typeof handler !== 'function') {
       throw new TypeError('"handler" must be a function.');
     }
-
+    // this should return a Map for the eventType.
     const listeners = this._eventTypeListeners.get(eventType);
     if(!listeners) {
       throw new Error(`Event "${eventType}" is not supported.`);
     }
 
     const remover = () => listeners.delete(remover);
+    // use the function as a unique key in the event listener Map.
     listeners.set(remover, handler);
+    // Return the remover so an external app can remove its listener.
+    return remover;
   }
 
   async _emit(eventType, eventData) {
