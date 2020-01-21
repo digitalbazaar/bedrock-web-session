@@ -59,7 +59,6 @@ export default class Session {
    * @returns {Function} A unique function to remover the listener.
    */
   on(eventType, handler) {
-    console.log('session on called');
     if(typeof eventType !== 'string') {
       throw new TypeError('"eventType" must be a string.');
     }
