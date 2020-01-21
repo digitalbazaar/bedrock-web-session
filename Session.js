@@ -50,7 +50,7 @@ export default class Session {
   }
 
   /**
-   * Registers a handler that is executed when an event listener fires.
+   * Registers a handler that is executed when an event is emitted.
    *
    * @param {string} eventType - An event such as change.
    * @param {function} handler - A handler function called when
