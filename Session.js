@@ -74,7 +74,7 @@ export default class Session {
     const remover = () => listeners.delete(remover);
     // use the function as a unique key in the event listener Map.
     listeners.set(remover, handler);
-    // Return the remover so an external app can remove its listener.
+    // return the remover so the application can remove the listener
     return remover;
   }
 
