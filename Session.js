@@ -65,7 +65,7 @@ export default class Session {
     if(typeof handler !== 'function') {
       throw new TypeError('"handler" must be a function.');
     }
-    // this should return a Map for the eventType.
+    // this returns a Map for `eventType`
     const listeners = this._eventTypeListeners.get(eventType);
     if(!listeners) {
       throw new Error(`Event "${eventType}" is not supported.`);
