@@ -9,7 +9,7 @@ export default class Session {
   constructor() {
     this.data = {};
     this._service = new SessionService();
-    this._eventTypeListeners = new Map([['change', new Map()]]);
+    this._eventTypeListeners = new Map([['change', new Set()]]);
   }
 
   /**
@@ -53,12 +53,13 @@ export default class Session {
    * Registers a handler that is executed when an event is emitted.
    *
    * @param {string} eventType - An event such as "change".
-   * @param {function} handler - A handler function called when
+   * @param {Function} handler - A handler function called when
    *   an event occurs.
    *
-   * @returns {function} A unique function to remover the listener.
-   */ 
+   * @returns {Function} A unique function to remover the listener.
+   */
   on(eventType, handler) {
+    console.log('session on called');
     if(typeof eventType !== 'string') {
       throw new TypeError('"eventType" must be a string.');
     }
@@ -71,16 +72,16 @@ export default class Session {
       throw new Error(`Event "${eventType}" is not supported.`);
     }
 
-    const remover = () => listeners.delete(remover);
-    // use the function as a unique key in the event listener Map.
-    listeners.set(remover, handler);
-    // return the remover so the application can remove the listener
+    const remover = () => listeners.delete(handler);
+    // add the function as a unique element in the event listener Set
+    listeners.add(handler);
+    // return the remover so the application can remove the handler
     return remover;
   }
 
   async _emit(eventType, eventData) {
     const listeners = this._eventTypeListeners.get(eventType);
-    for(const handler of listeners.values()) {
+    for(const handler of listeners) {
       await handler(eventData);
     }
   }
