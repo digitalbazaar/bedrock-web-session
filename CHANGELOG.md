@@ -1,5 +1,11 @@
 # bedrock-web-session ChangeLog
 
+## 1.3.0 - 2020-01-22
+
+### Added
+- The `on` API now returns a remover function that can be use to remove the
+  handler.
+
 ## 1.2.0 - 2019-04-15
 
 ### Added
