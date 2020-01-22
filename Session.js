@@ -14,13 +14,13 @@ export default class Session {
 
   /**
    * Refreshes this session instance by retrieving new session data via the
-   * session service. When the session has been explicitly changed (e.g. by
-   * logging a user into a server), the caller may optionally supply
+   * session service. When the session has been explicitly changed, by
+   * logging a user into a server, the caller may optionally supply
    * authentication information that can be used by `change` listeners. If
    * `authentication` is passed or if the refresh causes the session data
    * to change, then a `change` event is emitted.
    *
-   * @param {Object} authentication authentication information to pass to
+   * @param {object} authentication - Authentication information to pass to
    *   change listeners.
    */
   async refresh({authentication} = {}) {
