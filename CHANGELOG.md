@@ -1,5 +1,13 @@
 # bedrock-web-session ChangeLog
 
+## 1.4.0 - 2020-04-21
+
+### Added
+- Setup CI and coverage workflow.
+
+### Changed
+- Update deps.
+
 ## 1.3.0 - 2020-01-22
 
 ### Added
