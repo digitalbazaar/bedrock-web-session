@@ -9,7 +9,10 @@ export default class Session {
   constructor() {
     this.data = {};
     this._service = new SessionService();
-    this._eventTypeListeners = new Map([['change', new Set()]]);
+    this._eventTypeListeners = new Map([
+      ['change', new Set()],
+      ['expire', new Set()]
+    ]);
   }
 
   /**
