@@ -35,6 +35,7 @@ export const createSession = async (
 */
 export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
+  // note: you might need to refresh this.
   const session = await store.get({id});
   if(session) {
     return session;

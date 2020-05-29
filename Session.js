@@ -9,6 +9,8 @@ export default class Session {
   constructor() {
     this.data = {};
     this._service = new SessionService();
+    // this stores the timer used to expire a session
+    this._timeout = null;
     this._eventTypeListeners = new Map([
       ['change', new Set()],
       ['expire', new Set()]
@@ -30,6 +32,9 @@ export default class Session {
   async refresh({authentication} = {}) {
     const oldData = this.data;
     const newData = await this._service.get();
+    if(typeof newData.originalMaxAge === 'number') {
+      this.setTimeout({timeout: newData.originalMaxAge});
+    }
     // issue change event when new authentication is used or when
     // session data changes
     if(authentication || !deepEqual(oldData, newData)) {
@@ -48,7 +53,23 @@ export default class Session {
     }
   }
 
+  /**
+   * Sets a timeout based on the cookie's maxAge that will emit an
+   *   expire event.
+   *
+   * @param {object} options - Options to use.
+   * @param {number} options.timeout - The timeout.
+   *
+   * @returns {undefined} Just emits an event.
+  */
+  setTimeout({timeout}) {
+    clearTimeout(this._timeout);
+    this._timeout = setTimeout(
+      () => this._emit('expire', {data: this.data}), timeout);
+  }
+
   async end() {
+    clearTimeout(this._timeout);
     await this._service.logout();
     await this.refresh();
   }
