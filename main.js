@@ -35,7 +35,8 @@ export const createSession = async (
 */
 export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
-  // note: you might need to refresh this.
+  // the cached session is simply returned and intentionally not refreshed here;
+  // if the caller wants the session refreshed they may call `refresh()` on the result
   const session = await store.get({id});
   if(session) {
     return session;
