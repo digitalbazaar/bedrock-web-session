@@ -32,8 +32,8 @@ export default class Session {
   async refresh({authentication} = {}) {
     const oldData = this.data;
     const newData = await this._service.get();
-    if(typeof newData.originalMaxAge === 'number') {
-      this.setTimeout({timeout: newData.originalMaxAge});
+    if(typeof newData.ttl === 'number') {
+      this._setTimeout({timeout: newData.ttl});
     }
     // issue change event when new authentication is used or when
     // session data changes
@@ -62,7 +62,7 @@ export default class Session {
    *
    * @returns {undefined} Just emits an event.
   */
-  setTimeout({timeout}) {
+  _setTimeout({timeout}) {
     clearTimeout(this._timeout);
     this._timeout = setTimeout(
       () => this._emit('expire', {data: this.data}), timeout);
