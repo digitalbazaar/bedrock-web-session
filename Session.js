@@ -20,8 +20,9 @@ export default class Session {
    * `authentication` is passed or if the refresh causes the session data
    * to change, then a `change` event is emitted.
    *
-   * @param {object} authentication - Authentication information to pass to
-   *   change listeners.
+   * @param {object} options - The options to use.
+   * @param {object} [options.authentication] - Authentication information to
+   *  pass to change listeners.
    */
   async refresh({authentication} = {}) {
     const oldData = this.data;
