@@ -1,5 +1,12 @@
 # bedrock-web-session ChangeLog
 
+## 1.5.0 - 2020-07-01
+
+### Changed
+- Update deps.
+- Update test deps.
+- Update CI workflow.
+
 ## 1.4.0 - 2020-04-21
 
 ### Added
