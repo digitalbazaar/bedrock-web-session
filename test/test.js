@@ -14,6 +14,8 @@ require('bedrock-account');
 require('bedrock-account-http');
 require('bedrock-https-agent');
 require('bedrock-security-context');
+require('bedrock-session-http');
+require('bedrock-session-mongodb');
 require('bedrock-test');
 require('bedrock-karma');
 
