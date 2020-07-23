@@ -11,9 +11,9 @@ export {default as SessionService} from './SessionService.js';
 /**
  * Creates a Session with an optional id or store.
  *
- * @param {object} options - Options to use.
- * @param {string} [options.id = 'session.default'] - An id for the session.
- * @param {object} [options.store = defaultStore] - A store for the session.
+ * @param {object} [options={}] - Options to use.
+ * @param {string} [options.id='session.default'] - An id for the session.
+ * @param {object} [options.store=defaultStore] - A store for the session.
  *
  * @returns {object} The created session.
 */
@@ -27,9 +27,9 @@ export const createSession = async (
 /**
  * Gets a session from a store or creates a new session.
  *
- * @param {object} options - Options to use.
- * @param {string} [options.id = 'session.default'] - An id for the session.
- * @param {object} [options.store = defaultStore] - A store for the session.
+ * @param {object} [options={}] - Options to use.
+ * @param {string} [options.id='session.default'] - An id for the session.
+ * @param {object} [options.store=defaultStore] - A store for the session.
  *
  * @returns {object} A session.
 */
