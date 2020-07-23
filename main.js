@@ -15,7 +15,7 @@ export {default as SessionService} from './SessionService.js';
  * @param {string} [options.id='session.default'] - An id for the session.
  * @param {object} [options.store=defaultStore] - A store for the session.
  *
- * @returns {object} The created session.
+ * @returns {Promise<object>} The created session.
 */
 export const createSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
@@ -31,7 +31,7 @@ export const createSession = async (
  * @param {string} [options.id='session.default'] - An id for the session.
  * @param {object} [options.store=defaultStore] - A store for the session.
  *
- * @returns {object} A session.
+ * @returns {Promise<object>} A session.
 */
 export const getSession = async (
   {id = 'session.default', store = defaultStore} = {}) => {
