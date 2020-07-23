@@ -1,9 +1,9 @@
 # bedrock-web-session ChangeLog
 
-### 1.5.1 -
+### 1.5.1 - 2020-07-23
 
 ### Fixed
-- The id & store passed to `getSession` are passed to `createSession` too.
+- The `id` and `store` passed to `getSession` are passed to `createSession` too.
 
 ## 1.5.0 - 2020-07-01
 
