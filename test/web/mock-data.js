@@ -7,3 +7,10 @@
 
 const mocks = {};
 module.exports = mocks;
+
+mocks.accounts = {
+  sessionService: {
+    email: 'session-service@example.com',
+    password: 'Test0123456789!!!'
+  }
+};
