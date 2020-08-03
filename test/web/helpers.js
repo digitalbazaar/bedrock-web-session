@@ -1,0 +1,52 @@
+import {TokenService} from 'bedrock-web-authn-token';
+import {AccountService} from 'bedrock-web-account';
+import {authenticator} from 'otplib';
+
+const tokenService = new TokenService();
+const accountService = new AccountService();
+
+export async function login({email, password, totp}) {
+  const authResults = {};
+  const challenge = authenticator.generate(totp.secret);
+  authResults.totp = await tokenService.authenticate(
+    {type: 'totp', email, challenge});
+  authResults.password = await tokenService.authenticate(
+    {email, type: 'password', challenge: password});
+  authResults.login = await tokenService.login();
+  return authResults;
+}
+
+export async function createAccount({
+  email,
+  password,
+  short_name = 'session-test'
+}) {
+  // check to make sure the account does not already exist.
+  const exists = await accountService.exists({email});
+  if(exists) {
+    // if the account exists just return
+    return;
+  }
+  const account = await accountService.create({email});
+  await tokenService.setAuthenticationRequirements({
+    account: account.id,
+    requiredAuthenticationMethods: [
+      'totp-test-challenge',
+      'password-test'
+    ]
+  });
+  const {result: totp} = await tokenService.create({
+    account: account.id,
+    type: 'totp',
+    authenticationMethod: 'totp-test-challenge',
+    serviceId: short_name
+  });
+  await tokenService.create({
+    account: account.id,
+    type: 'password',
+    password,
+    authenticationMethod: 'password-test',
+    serviceId: short_name
+  });
+  return {account, email, password, totp};
+}
