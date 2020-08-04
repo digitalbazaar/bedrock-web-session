@@ -27,8 +27,10 @@ describe('session', () => {
       const keys = Object.keys(session);
       // an unauthenticated session has no data
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal([]);
     });
-    it('should get a session', async () => {
+    it('should get a session with no data', async () => {
       let err;
       try {
         session = await getSession({id: 'get-unauth-session', store});
@@ -41,6 +43,8 @@ describe('session', () => {
       const keys = Object.keys(session);
       // an unauthenticated session has no data
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal([]);
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
@@ -58,7 +62,7 @@ describe('session', () => {
         await session.end();
       }
     });
-    it('should get a session', async () => {
+    it('should get a session with data', async () => {
       let err;
       try {
         session = await getSession({id: 'get-auth-session', store});
@@ -71,6 +75,8 @@ describe('session', () => {
       const keys = Object.keys(session);
       // an authenticated session has data
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal(['account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -87,7 +93,8 @@ describe('session', () => {
       session.should.be.an('object');
       let keys = Object.keys(session);
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
-      should.exist(session.data.account);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal(['account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -109,6 +116,8 @@ describe('session', () => {
       let keys = Object.keys(session);
       // an authenticated session has data
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal(['account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -131,6 +140,8 @@ describe('session', () => {
       let keys = Object.keys(session);
       // an authenticated session has data
       keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      Object.keys(session.data).should.deep.equal(['account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
