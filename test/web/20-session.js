@@ -14,6 +14,20 @@ describe('session', () => {
         await session.end();
       }
     });
+    it('should create a session', async () => {
+      let err;
+      try {
+        session = await createSession({id: 'get-unauth-session', store});
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err);
+      should.exist(session);
+      session.should.be.an('object');
+      const keys = Object.keys(session);
+      // an unauthenticated session has no data
+      keys.should.deep.equal(['data', '_service', '_eventTypeListeners']);
+    });
     it('should get a session', async () => {
       let err;
       try {
