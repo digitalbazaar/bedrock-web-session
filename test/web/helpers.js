@@ -1,7 +1,9 @@
 import {TokenService} from 'bedrock-web-authn-token';
 import {AccountService} from 'bedrock-web-account';
 import {authenticator} from 'otplib';
+import {MemoryEngine} from 'bedrock-web-store';
 
+export const store = new MemoryEngine();
 const tokenService = new TokenService();
 const accountService = new AccountService();
 
