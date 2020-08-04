@@ -29,6 +29,7 @@
     "bedrock-web-account": "^1.2.0",
     "bedrock-web-authn-token": "^2.2.0",
     "bedrock-web-session": "file:..",
+    "delay": "^4.4.0",
     "otplib": "^12.0.1"
   }
 }

@@ -2,6 +2,7 @@
  * Copyright (c) 2019-2020 Digital Bazaar, Inc. All rights reserved.
  */
 
+import delay from 'delay';
 import {SessionService} from 'bedrock-web-session';
 import {login, createAccount} from './helpers.js';
 import mockData from './mock-data.js';
@@ -56,7 +57,7 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       const keys = Object.keys(session);
-      // an unauthenticated session has data
+      // an authenticated session has data
       keys.should.deep.equal(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
@@ -73,7 +74,7 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       let keys = Object.keys(session);
-      // an unauthenticated session has data
+      // an authenticated session has data
       keys.should.deep.equal(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
@@ -83,6 +84,55 @@ describe('sessionService API', () => {
       keys = Object.keys(session);
       // an unauthenticated session has no data
       keys.should.deep.equal([]);
+    });
+    it('should expire after 1 second', async function() {
+      let err;
+      try {
+        session = await sessionService.get();
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err);
+      should.exist(session);
+      session.should.be.an('object');
+      let keys = Object.keys(session);
+      // an authenticated session has data
+      keys.should.deep.equal(['account']);
+      session.account.should.be.an('object');
+      session.account.should.have.property('id');
+      session.account.id.should.equal(account.id);
+      await delay(2000);
+      session = await sessionService.get();
+      keys = Object.keys(session);
+      // an unauthenticated session has no data
+      keys.should.deep.equal([]);
+    });
+    it('should refresh on get', async function() {
+      let err;
+      try {
+        session = await sessionService.get();
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err);
+      should.exist(session);
+      session.should.be.an('object');
+      let keys = Object.keys(session);
+      // an authenticated session has data
+      keys.should.deep.equal(['account']);
+      session.account.should.be.an('object');
+      session.account.should.have.property('id');
+      session.account.id.should.equal(account.id);
+      for(let i = 0; i < 4; i++) {
+        await delay(250);
+        session = await sessionService.get();
+        keys = Object.keys(session);
+        // an authenticated session has data
+        keys.should.deep.equal(['account']);
+        session.account.should.be.an('object');
+        session.account.should.have.property('id');
+        session.account.id.should.equal(account.id);
+      }
     });
   }); // end unauthenticated request
 });
