@@ -44,3 +44,8 @@ roles['account.registered'] = {
     permissions.ACCOUNT_INSERT.id
   ]
 };
+
+// test specific settings
+config.express.session.rolling = true;
+config.express.session.resave = true;
+config.express.session.saveUninitialized = false;
