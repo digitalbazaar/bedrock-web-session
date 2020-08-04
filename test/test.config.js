@@ -33,6 +33,14 @@ config['account-http'].autoLoginNewAccounts = true;
 config.express.session.secret = 'NOTASECRET';
 config.express.session.key = 'web-authn-token-test-session';
 config.express.session.prefix = 'web-authn-token-test';
+// test specific settings
+config.express.session.rolling = true;
+config.express.session.resave = true;
+config.express.session.saveUninitialized = false;
+
+// FIXME change this to a common setting
+// make sessions last 1 second for this test
+config['session-mongodb'].ttl = 1;
 
 roles['account.registered'] = {
   id: 'account.registered',
@@ -44,8 +52,3 @@ roles['account.registered'] = {
     permissions.ACCOUNT_INSERT.id
   ]
 };
-
-// test specific settings
-config.express.session.rolling = true;
-config.express.session.resave = true;
-config.express.session.saveUninitialized = false;
