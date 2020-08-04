@@ -18,7 +18,7 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
     });
-    it('should get a session', async () => {
+    it('should get a session with no account', async () => {
       let err;
       try {
         session = await sessionService.get();
@@ -46,7 +46,7 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
     });
-    it('should get a session', async () => {
+    it('should get a session with an account', async () => {
       let err;
       try {
         session = await sessionService.get();
@@ -134,5 +134,5 @@ describe('sessionService API', () => {
         session.account.id.should.equal(account.id);
       }
     });
-  }); // end unauthenticated request
+  }); // end authenticated request
 });
