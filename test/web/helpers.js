@@ -1,3 +1,7 @@
+/*!
+ * Copyright (c) 2019-2020 Digital Bazaar, Inc. All rights reserved.
+ */
+
 import {TokenService} from 'bedrock-web-authn-token';
 import {AccountService} from 'bedrock-web-account';
 import {authenticator} from 'otplib';

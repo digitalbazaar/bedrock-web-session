@@ -1,3 +1,7 @@
+/*!
+ * Copyright (c) 2019-2020 Digital Bazaar, Inc. All rights reserved.
+ */
+
 import delay from 'delay';
 import {spy, match} from 'sinon';
 import {createSession, getSession} from 'bedrock-web-session';
