@@ -12,5 +12,9 @@ mocks.accounts = {
   sessionService: {
     email: 'session-service@example.com',
     password: 'Test0123456789!!!'
+  },
+  session: {
+    email: 'session@example.com',
+    password: 'Test0123456789!!!'
   }
 };
