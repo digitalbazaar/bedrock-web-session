@@ -30,10 +30,11 @@ describe('sessionService API', () => {
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
-    let account, totp, email, password = null;
+    const {email, password} = mockData.accounts.sessionService;
+    let account = null;
+    let totp = null;
     before(async function() {
-      ({account, totp, email, password} = await createAccount(
-        mockData.accounts.sessionService));
+      ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
       await login({email, password, totp});
