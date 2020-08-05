@@ -53,10 +53,12 @@ describe('session API', () => {
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
-    let session, account, totp, email, password = null;
+    const {email, password} = mockData.accounts.session;
+    let session = null;
+    let account = null;
+    let totp = null;
     before(async function() {
-      ({account, totp, email, password} = await createAccount(
-        mockData.accounts.session));
+      ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
       session = null;

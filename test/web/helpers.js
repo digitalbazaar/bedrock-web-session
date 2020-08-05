@@ -54,5 +54,5 @@ export async function createAccount({
     authenticationMethod: 'password-test',
     serviceId: short_name
   });
-  return {account, email, password, totp};
+  return {account, totp};
 }
