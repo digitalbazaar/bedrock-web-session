@@ -38,8 +38,11 @@ export async function createAccount({
   // check to make sure the account does not already exist.
   const exists = await accountService.exists({email});
   if(exists) {
-    // if the account exists just return
-    return;
+    // if the account exists throw an error
+    const duplicateError = new Error(
+      `An account with the email ${email} was already created}`);
+    duplicateError.name = 'DuplicateError';
+    throw duplicateError;
   }
   const account = await accountService.create({email});
   await tokenService.setAuthenticationRequirements({
