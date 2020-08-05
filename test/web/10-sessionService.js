@@ -11,15 +11,12 @@ const sessionService = new SessionService();
 
 describe('sessionService API', () => {
   describe('unauthenticated request', () => {
-    let session;
-    beforeEach(function() {
-      session = null;
-    });
     afterEach(async function() {
       await sessionService.logout();
     });
     it('should get a session with no account', async () => {
       let err;
+      let session = null;
       try {
         session = await sessionService.get();
       } catch(e) {
@@ -33,20 +30,20 @@ describe('sessionService API', () => {
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
-    let session, account, totp, email, password = null;
+    let account, totp, email, password = null;
     before(async function() {
       ({account, totp, email, password} = await createAccount(
         mockData.accounts.sessionService));
     });
     beforeEach(async function() {
-      session = null;
       await login({email, password, totp});
     });
     afterEach(async function() {
       await sessionService.logout();
     });
     it('should get a session with an account', async () => {
-      let err;
+      let err = null;
+      let session = null;
       try {
         session = await sessionService.get();
       } catch(e) {
@@ -63,7 +60,8 @@ describe('sessionService API', () => {
       session.account.id.should.equal(account.id);
     });
     it('should logout a session', async () => {
-      let err;
+      let err = null;
+      let session = null;
       try {
         session = await sessionService.get();
       } catch(e) {
@@ -85,7 +83,8 @@ describe('sessionService API', () => {
       keys.should.deep.equal([]);
     });
     it('should expire after 1 second', async function() {
-      let err;
+      let err = null;
+      let session = null;
       try {
         session = await sessionService.get();
       } catch(e) {
@@ -107,7 +106,8 @@ describe('sessionService API', () => {
       keys.should.deep.equal([]);
     });
     it('should refresh on get', async function() {
-      let err;
+      let err = null;
+      let session = null;
       try {
         session = await sessionService.get();
       } catch(e) {
