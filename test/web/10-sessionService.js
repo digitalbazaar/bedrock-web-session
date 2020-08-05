@@ -34,6 +34,8 @@ describe('sessionService API', () => {
     let account = null;
     let totp = null;
     before(async function() {
+      // ensure we are logged out before creating an account
+      await sessionService.logout();
       ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {

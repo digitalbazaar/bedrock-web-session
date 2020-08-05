@@ -11,6 +11,13 @@ export const store = new MemoryEngine();
 const tokenService = new TokenService();
 const accountService = new AccountService();
 
+// safely ends a session
+export async function logout({session} = {}) {
+  if(session && session.end) {
+    await session.end();
+  }
+}
+
 export async function login({email, password, totp}) {
   const authResults = {};
   const challenge = authenticator.generate(totp.secret);
