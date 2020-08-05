@@ -16,6 +16,8 @@ describe('session API', () => {
     });
     afterEach(async function() {
       await logout({session});
+      // this helps cut down on test failures
+      await delay(250);
     });
     it('should create a session', async () => {
       let err;
@@ -67,6 +69,8 @@ describe('session API', () => {
       // this will delete the session from the store
       // after ending it
       await logout({session, id: sessionId});
+      // this is to prevent the ci from consistently failing
+      await delay(250);
     });
     it('should get a session with data', async () => {
       let err;
