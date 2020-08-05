@@ -28,9 +28,8 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      const keys = Object.keys(session);
       // an unauthenticated session has no data
-      keys.should.deep.equal([]);
+      session.should.eql({});
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
