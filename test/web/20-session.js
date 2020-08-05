@@ -186,13 +186,17 @@ describe('session API', () => {
         session.data.account.should.be.an('object');
         session.data.account.should.have.property('id');
         session.data.account.id.should.equal(account.id);
-        const changeEvent = new Promise(resolve => {
+        const changeEvent = new Promise((resolve, reject) => {
           session.on('change', ({authentication, oldData, newData}) => {
-            should.not.exist(authentication);
-            should.exist(oldData);
-            should.exist(newData);
-            oldData.should.not.eql(newData);
-            resolve();
+            try {
+              should.not.exist(authentication);
+              should.exist(oldData);
+              should.exist(newData);
+              oldData.should.not.eql(newData);
+              resolve();
+            } catch(e) {
+              reject(e);
+            }
           });
         });
         await delay(2000);
@@ -221,13 +225,17 @@ describe('session API', () => {
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
-      const changeEvent = new Promise(resolve => {
+      const changeEvent = new Promise((resolve, reject) => {
         session.on('change', ({authentication, oldData, newData}) => {
-          should.not.exist(authentication);
-          should.exist(oldData);
-          should.exist(newData);
-          oldData.should.not.eql(newData);
-          resolve();
+          try {
+            should.not.exist(authentication);
+            should.exist(oldData);
+            should.exist(newData);
+            oldData.should.not.eql(newData);
+            resolve();
+          } catch(e) {
+            reject(e);
+          }
         });
       });
       await session.end();
@@ -256,8 +264,14 @@ describe('session API', () => {
         session.data.account.should.have.property('id');
         session.data.account.id.should.equal(account.id);
         let authSpy = null;
-        const changeEvent = new Promise(resolve => {
-          authSpy = spy(() => resolve());
+        const changeEvent = new Promise((resolve, reject) => {
+          authSpy = spy(() => {
+            try {
+              resolve();
+            } catch(e) {
+              reject(e);
+            }
+          });
           session.on('change', authSpy);
         });
         await session.refresh({authentication: expectedAuth});
