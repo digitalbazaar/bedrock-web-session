@@ -54,7 +54,7 @@ describe('sessionService API', () => {
       session.should.be.an('object');
       const keys = Object.keys(session);
       // an authenticated session has data
-      keys.should.deep.equal(['account']);
+      keys.should.eql(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -70,17 +70,16 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      let keys = Object.keys(session);
+      const keys = Object.keys(session);
       // an authenticated session has data
-      keys.should.deep.equal(['account']);
+      keys.should.eql(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
       await sessionService.logout();
       session = await sessionService.get();
-      keys = Object.keys(session);
       // an unauthenticated session has no data
-      keys.should.deep.equal([]);
+      session.should.eql({});
     });
     it('should expire after 1 second', async function() {
       let err = null;
@@ -93,17 +92,16 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      let keys = Object.keys(session);
+      const keys = Object.keys(session);
       // an authenticated session has data
-      keys.should.deep.equal(['account']);
+      keys.should.eql(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
       await delay(2000);
       session = await sessionService.get();
-      keys = Object.keys(session);
       // an unauthenticated session has no data
-      keys.should.deep.equal([]);
+      session.should.eql({});
     });
     it('should refresh on get', async function() {
       let err = null;
@@ -118,16 +116,19 @@ describe('sessionService API', () => {
       session.should.be.an('object');
       let keys = Object.keys(session);
       // an authenticated session has data
-      keys.should.deep.equal(['account']);
+      keys.should.eql(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
-      for(let i = 0; i < 4; i++) {
+      // this will refresh 4 times over 2 seconds
+      // demonstrating that the session remains authenticated
+      // provided we refresh before the session times out after 1000 ms
+      for(let i = 0; i < 5; i++) {
         await delay(250);
         session = await sessionService.get();
         keys = Object.keys(session);
         // an authenticated session has data
-        keys.should.deep.equal(['account']);
+        keys.should.eql(['account']);
         session.account.should.be.an('object');
         session.account.should.have.property('id');
         session.account.id.should.equal(account.id);
