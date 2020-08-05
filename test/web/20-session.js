@@ -5,7 +5,7 @@
 import delay from 'delay';
 import {spy, match} from 'sinon';
 import {createSession, getSession} from 'bedrock-web-session';
-import {login, createAccount, store} from './helpers.js';
+import {login, createAccount, store, logout} from './helpers.js';
 import mockData from './mock-data.js';
 
 describe('session API', () => {
@@ -15,9 +15,7 @@ describe('session API', () => {
       session = null;
     });
     afterEach(async function() {
-      if(session && session.end) {
-        await session.end();
-      }
+      await logout({session});
     });
     it('should create a session', async () => {
       let err;
@@ -58,6 +56,7 @@ describe('session API', () => {
     let account = null;
     let totp = null;
     before(async function() {
+      await logout({session});
       ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
@@ -65,9 +64,7 @@ describe('session API', () => {
       await login({email, password, totp});
     });
     afterEach(async function() {
-      if(session && session.end) {
-        await session.end();
-      }
+      await logout({session});
     });
     it('should get a session with data', async () => {
       let err;
