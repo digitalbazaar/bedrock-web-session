@@ -55,9 +55,8 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      const keys = Object.keys(session);
-      // an authenticated session has data
-      keys.should.eql(['account']);
+      // an authenticated session has an account
+      session.should.have.keys(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -73,9 +72,8 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      const keys = Object.keys(session);
-      // an authenticated session has data
-      keys.should.eql(['account']);
+      // an authenticated session has an account
+      session.should.have.keys(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -95,9 +93,8 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      const keys = Object.keys(session);
-      // an authenticated session has data
-      keys.should.eql(['account']);
+      // an authenticated session has an account
+      session.should.have.keys(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -117,9 +114,8 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      let keys = Object.keys(session);
-      // an authenticated session has data
-      keys.should.eql(['account']);
+      // an authenticated session has an account
+      session.should.have.keys(['account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -129,9 +125,8 @@ describe('sessionService API', () => {
       for(let i = 0; i < 5; i++) {
         await delay(250);
         session = await sessionService.get();
-        keys = Object.keys(session);
-        // an authenticated session has data
-        keys.should.eql(['account']);
+        // an authenticated session has an account
+        session.should.have.keys(['account']);
         session.account.should.be.an('object');
         session.account.should.have.property('id');
         session.account.id.should.equal(account.id);
