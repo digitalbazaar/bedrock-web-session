@@ -10,6 +10,10 @@ const {permissions, roles} = config.permission;
 
 config.karma.suites['bedrock-web'] = path.join('web', '**', '*.js');
 
+// this should run tests in separate windows
+// @see https://karma-runner.github.io/5.0/config/configuration-file.html
+config.karma.config.client.useIframe = false;
+
 config.karma.config.proxies = {
   '/': 'https://localhost:18443'
 };
