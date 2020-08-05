@@ -11,11 +11,12 @@ export const store = new MemoryEngine();
 const tokenService = new TokenService();
 const accountService = new AccountService();
 
-// safely ends a session
-export async function logout({session} = {}) {
+// safely ends a session & removes from it from the store.
+export async function logout({session, id} = {}) {
   if(session && session.end) {
     await session.end();
   }
+  return store.delete({id});
 }
 
 export async function login({email, password, totp}) {
