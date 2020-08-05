@@ -38,7 +38,6 @@ config.express.session.rolling = true;
 config.express.session.resave = true;
 config.express.session.saveUninitialized = false;
 
-// FIXME change this to a common setting
 // make sessions last 1 second for this test
 config['session-mongodb'].ttl = 1;
 
