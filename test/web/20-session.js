@@ -29,7 +29,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       // an unauthenticated session has no data
       session.data.should.eql({});
@@ -44,7 +49,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       // an unauthenticated session has no data
       session.data.should.eql({});
@@ -82,7 +92,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       // an authenticated session has data
       session.data.should.have.keys(['account']);
@@ -100,7 +115,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       session.data.should.have.keys(['account']);
       session.data.account.should.be.an('object');
@@ -108,7 +128,12 @@ describe('session API', () => {
       session.data.account.id.should.equal(account.id);
       should.exist(session.end);
       await session.end();
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.eql({});
     });
     it('should expire after 1 second', async function() {
@@ -121,7 +146,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       // an authenticated session has data
       session.data.should.have.keys(['account']);
@@ -130,7 +160,12 @@ describe('session API', () => {
       session.data.account.id.should.equal(account.id);
       await delay(2000);
       await session.refresh();
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.eql({});
     });
     it('should refresh', async function() {
@@ -143,7 +178,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       session.data.should.have.keys(['account']);
       session.data.account.should.be.an('object');
@@ -155,7 +195,12 @@ describe('session API', () => {
       for(let i = 0; i < 5; i++) {
         await delay(250);
         await session.refresh();
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+        session.should.have.keys([
+          'data',
+          '_service',
+          '_timeout',
+          '_eventTypeListeners'
+        ]);
         session.data.should.be.an('object');
         session.data.should.have.keys(['account']);
         session.data.account.should.be.an('object');
@@ -174,7 +219,12 @@ describe('session API', () => {
         should.not.exist(err);
         should.exist(session);
         session.should.be.an('object');
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+        session.should.have.keys([
+          'data',
+          '_service',
+          '_timeout',
+          '_eventTypeListeners'
+        ]);
         session.data.should.be.an('object');
         session.data.should.have.keys(['account']);
         session.data.account.should.be.an('object');
@@ -195,7 +245,12 @@ describe('session API', () => {
         });
         await delay(2000);
         await session.refresh();
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+        session.should.have.keys([
+          'data',
+          '_service',
+          '_timeout',
+          '_eventTypeListeners'
+        ]);
         // an unauthenticated session has no data
         session.data.should.eql({});
         await changeEvent;
@@ -210,7 +265,12 @@ describe('session API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.be.an('object');
       // an authenticated session has data
       session.data.should.have.keys(['account']);
@@ -231,7 +291,12 @@ describe('session API', () => {
         });
       });
       await session.end();
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.should.have.keys([
+        'data',
+        '_service',
+        '_timeout',
+        '_eventTypeListeners'
+      ]);
       session.data.should.eql({});
       await changeEvent;
     });
@@ -247,7 +312,12 @@ describe('session API', () => {
         should.not.exist(err);
         should.exist(session);
         session.should.be.an('object');
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+        session.should.have.keys([
+          'data',
+          '_service',
+          '_timeout',
+          '_eventTypeListeners'
+        ]);
         session.data.should.be.an('object');
         session.data.should.have.keys(['account']);
         session.data.account.should.be.an('object');
@@ -265,7 +335,12 @@ describe('session API', () => {
           session.on('change', authSpy);
         });
         await session.refresh({authentication: expectedAuth});
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+        session.should.have.keys([
+          'data',
+          '_service',
+          '_timeout',
+          '_eventTypeListeners'
+        ]);
         session.data.should.be.an('object');
         session.data.should.have.keys(['account']);
         await changeEvent;
