@@ -13,6 +13,8 @@ config.karma.suites['bedrock-web'] = path.join('web', '**', '*.js');
 // this should run tests in separate windows
 // @see https://karma-runner.github.io/5.0/config/configuration-file.html
 config.karma.config.client.useIframe = false;
+// only allow 1 browser window for these tests to reduce flakiness
+config.karma.config.concurrency = 1;
 
 config.karma.config.proxies = {
   '/': 'https://localhost:18443'
