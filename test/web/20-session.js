@@ -36,10 +36,9 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      // an unauthenticated session has a ttl
-      session.data.should.have.keys(['ttl']);
-      session.data.ttl.should.be.a('number');
-      session.data.ttl.should.equal(mockData.expectedTTL);
+      // a session that has not been created on the server
+      // in turn has no ttl as it is untracked
+      session.data.should.eql({});
     });
     it('should get a session with no data', async () => {
       let err;
