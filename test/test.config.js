@@ -39,7 +39,6 @@ config.express.session.prefix = 'web-authn-token-test';
 // test specific settings
 config.express.session.rolling = true;
 config.express.session.resave = true;
-config.express.session.saveUninitialized = false;
 
 // make sessions last 1 second for this test
 config.express.session.ttl = 1 * 1000;

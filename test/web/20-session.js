@@ -70,8 +70,11 @@ describe('session API', () => {
     let totp = null;
     // all tests will use the same session id
     const sessionId = 'auth-session-tests';
+    // this runs before once before all auth tests
     before(async function() {
+      // ensure there is no existing session
       await logout({session});
+      // create the account and get the totp
       ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
@@ -164,7 +167,8 @@ describe('session API', () => {
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
-      await delay(2000);
+      await delay(mockData.expectedTTL * 2);
+      // a session refreshed after 2 x ttl should be expired
       await session.refresh();
       session.should.have.keys([
         'data',
