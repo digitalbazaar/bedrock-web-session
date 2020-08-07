@@ -36,8 +36,10 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      // an unauthenticated session has no data
-      session.data.should.eql({});
+      // an unauthenticated session has a ttl
+      session.data.should.have.keys(['ttl']);
+      session.data.ttl.should.be.a('number');
+      session.data.ttl.should.equal(mockData.expectedTTL);
     });
     it('should get a session with no data', async () => {
       let err;
@@ -56,8 +58,10 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      // an unauthenticated session has no data
-      session.data.should.eql({});
+      // an unauthenticated session has a ttl
+      session.data.should.have.keys(['ttl']);
+      session.data.ttl.should.be.a('number');
+      session.data.ttl.should.equal(mockData.expectedTTL);
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
@@ -100,7 +104,7 @@ describe('session API', () => {
       ]);
       session.data.should.be.an('object');
       // an authenticated session has data
-      session.data.should.have.keys(['account']);
+      session.data.should.have.keys(['ttl', 'account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -122,7 +126,7 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      session.data.should.have.keys(['account']);
+      session.data.should.have.keys(['ttl', 'account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -134,7 +138,10 @@ describe('session API', () => {
         '_timeout',
         '_eventTypeListeners'
       ]);
-      session.data.should.eql({});
+      // an unauthenticated session has a ttl
+      session.data.should.have.keys(['ttl']);
+      session.data.ttl.should.be.a('number');
+      session.data.ttl.should.equal(mockData.expectedTTL);
     });
     it('should expire after 1 second', async function() {
       let err;
@@ -154,7 +161,7 @@ describe('session API', () => {
       ]);
       session.data.should.be.an('object');
       // an authenticated session has data
-      session.data.should.have.keys(['account']);
+      session.data.should.have.keys(['ttl', 'account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -166,7 +173,10 @@ describe('session API', () => {
         '_timeout',
         '_eventTypeListeners'
       ]);
-      session.data.should.eql({});
+      // an unauthenticated session has a ttl
+      session.data.should.have.keys(['ttl']);
+      session.data.ttl.should.be.a('number');
+      session.data.ttl.should.equal(mockData.expectedTTL);
     });
     it('should refresh', async function() {
       let err;
@@ -185,7 +195,7 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      session.data.should.have.keys(['account']);
+      session.data.should.have.keys(['ttl', 'account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -202,7 +212,7 @@ describe('session API', () => {
           '_eventTypeListeners'
         ]);
         session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
+        session.data.should.have.keys(['ttl', 'account']);
         session.data.account.should.be.an('object');
         session.data.account.should.have.property('id');
         session.data.account.id.should.equal(account.id);
@@ -226,7 +236,7 @@ describe('session API', () => {
           '_eventTypeListeners'
         ]);
         session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
+        session.data.should.have.keys(['ttl', 'account']);
         session.data.account.should.be.an('object');
         session.data.account.should.have.property('id');
         session.data.account.id.should.equal(account.id);
@@ -251,8 +261,10 @@ describe('session API', () => {
           '_timeout',
           '_eventTypeListeners'
         ]);
-        // an unauthenticated session has no data
-        session.data.should.eql({});
+        // an unauthenticated session has a ttl
+        session.data.should.have.keys(['ttl']);
+        session.data.ttl.should.be.a('number');
+        session.data.ttl.should.equal(mockData.expectedTTL);
         await changeEvent;
       });
     it('should emit change event on session.end', async function() {
@@ -272,8 +284,8 @@ describe('session API', () => {
         '_eventTypeListeners'
       ]);
       session.data.should.be.an('object');
-      // an authenticated session has data
-      session.data.should.have.keys(['account']);
+      // an authenticated session has an account
+      session.data.should.have.keys(['ttl', 'account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
@@ -297,7 +309,10 @@ describe('session API', () => {
         '_timeout',
         '_eventTypeListeners'
       ]);
-      session.data.should.eql({});
+      // an unauthenticated session has a ttl
+      session.data.should.have.keys(['ttl']);
+      session.data.ttl.should.be.a('number');
+      session.data.ttl.should.equal(mockData.expectedTTL);
       await changeEvent;
     });
     it('should emit change event if authentication passed to refresh',
@@ -319,7 +334,7 @@ describe('session API', () => {
           '_eventTypeListeners'
         ]);
         session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
+        session.data.should.have.keys(['ttl', 'account']);
         session.data.account.should.be.an('object');
         session.data.account.should.have.property('id');
         session.data.account.id.should.equal(account.id);
@@ -342,7 +357,7 @@ describe('session API', () => {
           '_eventTypeListeners'
         ]);
         session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
+        session.data.should.have.keys(['ttl', 'account']);
         await changeEvent;
         authSpy.withArgs({
           authentication: expectedAuth,

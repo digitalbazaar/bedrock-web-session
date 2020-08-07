@@ -42,7 +42,7 @@ config.express.session.resave = true;
 config.express.session.saveUninitialized = false;
 
 // make sessions last 1 second for this test
-config['session-mongodb'].ttl = 1;
+config.express.session.ttl = 1 * 1000;
 
 roles['account.registered'] = {
   id: 'account.registered',
