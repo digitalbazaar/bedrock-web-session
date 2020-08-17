@@ -15,6 +15,9 @@ export default class Session {
       ['change', new Set()],
       ['expire', new Set()]
     ]);
+    window.addEventListener('storage', ({key, newValue}) => {
+      this._setTimeout({key, timeout: newValue});
+    });
   }
 
   /**
@@ -32,8 +35,14 @@ export default class Session {
   async refresh({authentication} = {}) {
     const oldData = this.data;
     const newData = await this._service.get();
-    if(typeof newData.ttl === 'number') {
-      this._setTimeout({timeout: newData.ttl});
+    const {ttl, account} = newData;
+    if((typeof ttl === 'number') && (typeof account === 'object')) {
+      const key = this._formatStorageKey({account});
+      // if the user has the same site open in multipe tabs
+      // the tabs will see this storage event
+      window.localStorage.setItem(key, ttl);
+      // this current window will not see the storageEvent
+      this._setTimeout({key, timeout: ttl, account, newData});
     }
     // issue change event when new authentication is used or when
     // session data changes
@@ -52,26 +61,45 @@ export default class Session {
       }
     }
   }
+  /**
+   * Creates a common unique key for session storage.
+   *
+   * @param {object} options - Options to use.
+   * @param {object} options.account - The authenticated session's account.
+   *
+   * @returns {string} - A unique session key identifier.
+  */
+  _formatStorageKey({account}) {
+    const {id} = account;
+    if(!id) {
+      throw new Error('');
+    }
+    return `session-timeout-${id}`;
+  }
 
   /**
    * Sets a timeout based on the cookie's maxAge that will emit an
    *   expire event.
    *
    * @param {object} options - Options to use.
+   * @param {string} options.key - A unique session timeout key.
    * @param {number} options.timeout - The timeout.
+   * @param {object} options.newData - The newData from the latest refresh.
    *
    * @returns {undefined} Just emits an event.
   */
-  _setTimeout({timeout}) {
+  _setTimeout({key, timeout, newData}) {
+    // use the newData if available.
+    const data = newData || this.data || {};
+    const expectedKey = this._formatStorageKey({account: data.account});
+    if(key.trim() !== expectedKey) {
+      return;
+    }
     clearTimeout(this._timeout);
+    // only set the timeout if we are authenticated
+    // and the ttl is a number
     this._timeout = setTimeout(
-      () => this._emit('expire', {data: this.data}), timeout);
-  }
-
-  async end() {
-    clearTimeout(this._timeout);
-    await this._service.logout();
-    await this.refresh();
+      () => this._emit('expire', {data}), timeout);
   }
 
   /**
