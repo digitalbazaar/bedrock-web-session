@@ -38,9 +38,16 @@ export default class Session {
     const {ttl, account} = newData;
     if((typeof ttl === 'number') && (typeof account === 'object')) {
       const key = this._formatStorageKey({account});
+      const message = JSON.stringify({
+        ttl,
+        // chrome caches localStorage so this ensures
+        // each refresh emits a storage event
+        // calling setItem with the same key and value results in no event
+        update: Date.now()
+      });
       // if the user has the same site open in multipe tabs
       // the tabs will see this storage event
-      window.localStorage.setItem(key, ttl);
+      window.localStorage.setItem(key, message);
       // this current window will not see the storageEvent
       this._setTimeout({key, timeout: ttl, account, newData});
     }
@@ -78,9 +85,11 @@ export default class Session {
   _formatStorageKey({account}) {
     const {id} = account;
     if(!id) {
-      throw new Error('');
+      const dataError = new Error('Object account should have an id');
+      dataError.name = 'DataError';
+      throw dataError;
     }
-    return `session-timeout-${id}`;
+    return `session-${id}`;
   }
 
   /**
@@ -102,10 +111,14 @@ export default class Session {
       return;
     }
     clearTimeout(this._timeout);
+    // the timeout might be a json object from localStorage
+    let _timeout = JSON.parse(timeout);
+    // if it is json use the ttl else use the number
+    _timeout = _timeout.ttl || _timeout;
     // only set the timeout if we are authenticated
     // and the ttl is a number
     this._timeout = setTimeout(
-      () => this._emit('expire', {data}), timeout);
+      () => this._emit('expire', {data}), _timeout);
   }
 
   /**
