@@ -9,7 +9,15 @@ export default class Session {
   constructor() {
     this.data = {};
     this._service = new SessionService();
-    this._eventTypeListeners = new Map([['change', new Set()]]);
+    // this stores the timer used to expire a session
+    this._timeout = null;
+    this._eventTypeListeners = new Map([
+      ['change', new Set()],
+      ['expire', new Set()]
+    ]);
+    window.addEventListener('storage', ({key, newValue}) => {
+      this._setTimeout({key, timeout: newValue});
+    });
   }
 
   /**
@@ -27,6 +35,22 @@ export default class Session {
   async refresh({authentication} = {}) {
     const oldData = this.data;
     const newData = await this._service.get();
+    const {ttl, account} = newData;
+    if((typeof ttl === 'number') && (typeof account === 'object')) {
+      const key = this._formatStorageKey({account});
+      const message = JSON.stringify({
+        ttl,
+        // chrome caches localStorage so this ensures
+        // each refresh emits a storage event
+        // calling setItem with the same key and value results in no event
+        update: Date.now()
+      });
+      // if the user has the same site open in multipe tabs
+      // the tabs will see this storage event
+      window.localStorage.setItem(key, message);
+      // this current window will not see the storageEvent
+      this._setTimeout({key, timeout: ttl, account, newData});
+    }
     // issue change event when new authentication is used or when
     // session data changes
     if(authentication || !deepEqual(oldData, newData)) {
@@ -48,6 +72,53 @@ export default class Session {
   async end() {
     await this._service.logout();
     await this.refresh();
+  }
+
+  /**
+   * Creates a common unique key for session storage.
+   *
+   * @param {object} options - Options to use.
+   * @param {object} options.account - The authenticated session's account.
+   *
+   * @returns {string} - A unique session key identifier.
+  */
+  _formatStorageKey({account}) {
+    const {id} = account;
+    if(!id) {
+      const dataError = new Error('Object account should have an id');
+      dataError.name = 'DataError';
+      throw dataError;
+    }
+    return `session-${id}`;
+  }
+
+  /**
+   * Sets a timeout based on the cookie's maxAge that will emit an
+   *   expire event.
+   *
+   * @param {object} options - Options to use.
+   * @param {string} options.key - A unique session timeout key.
+   * @param {number} options.timeout - The timeout.
+   * @param {object} options.newData - The newData from the latest refresh.
+   *
+   * @returns {undefined} Just emits an event.
+  */
+  _setTimeout({key, timeout, newData}) {
+    // use the newData if available.
+    const data = newData || this.data || {};
+    const expectedKey = this._formatStorageKey({account: data.account});
+    if(key.trim() !== expectedKey) {
+      return;
+    }
+    clearTimeout(this._timeout);
+    // the timeout might be a json object from localStorage
+    let _timeout = JSON.parse(timeout);
+    // if it is json use the ttl else use the number
+    _timeout = _timeout.ttl || _timeout;
+    // only set the timeout if we are authenticated
+    // and the ttl is a number
+    this._timeout = setTimeout(
+      () => this._emit('expire', {data}), _timeout);
   }
 
   /**

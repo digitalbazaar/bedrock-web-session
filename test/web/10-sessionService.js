@@ -14,7 +14,8 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
       // this helps cut down on test failures
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should get a session with no account', async () => {
       let err;
@@ -27,8 +28,10 @@ describe('sessionService API', () => {
       should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
-      // an unauthenticated session has no data
-      session.should.eql({});
+      // an unauthenticated session has a ttl
+      session.should.have.keys(['ttl']);
+      session.ttl.should.be.a('number');
+      session.ttl.should.equal(mockData.expectedTTL);
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
@@ -41,12 +44,15 @@ describe('sessionService API', () => {
       ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
+      // ensure we are logged out before logging in
+      await sessionService.logout();
       await login({email, password, totp});
     });
     afterEach(async function() {
       await sessionService.logout();
       // this helps cut down on test failures
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should get a session with an account', async () => {
       let err = null;
@@ -60,7 +66,7 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       // an authenticated session has an account
-      session.should.have.keys(['account']);
+      session.should.have.keys(['ttl', 'account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -77,14 +83,16 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       // an authenticated session has an account
-      session.should.have.keys(['account']);
+      session.should.have.keys(['ttl', 'account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
       await sessionService.logout();
       session = await sessionService.get();
-      // an unauthenticated session has no data
-      session.should.eql({});
+      // an unauthenticated session has a ttl
+      session.should.have.keys(['ttl']);
+      session.ttl.should.be.a('number');
+      session.ttl.should.equal(mockData.expectedTTL);
     });
     it('should expire after 1 second', async function() {
       let err = null;
@@ -98,14 +106,17 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       // an authenticated session has an account
-      session.should.have.keys(['account']);
+      session.should.have.keys(['ttl', 'account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
-      await delay(2000);
+      // wait 2x the ttl for session expiration
+      await delay(2 * mockData.expectedTTL);
       session = await sessionService.get();
-      // an unauthenticated session has no data
-      session.should.eql({});
+      // an unauthenticated session has a ttl
+      session.should.have.keys(['ttl']);
+      session.ttl.should.be.a('number');
+      session.ttl.should.equal(mockData.expectedTTL);
     });
     it('should refresh on get', async function() {
       let err = null;
@@ -119,7 +130,7 @@ describe('sessionService API', () => {
       should.exist(session);
       session.should.be.an('object');
       // an authenticated session has an account
-      session.should.have.keys(['account']);
+      session.should.have.keys(['ttl', 'account']);
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
@@ -130,10 +141,12 @@ describe('sessionService API', () => {
         await delay(250);
         session = await sessionService.get();
         // an authenticated session has an account
-        session.should.have.keys(['account']);
+        session.should.have.keys(['ttl', 'account']);
         session.account.should.be.an('object');
         session.account.should.have.property('id');
         session.account.id.should.equal(account.id);
+        session.ttl.should.be.a('number');
+        session.ttl.should.equal(mockData.expectedTTL);
       }
     });
   }); // end authenticated request
