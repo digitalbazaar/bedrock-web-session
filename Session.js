@@ -61,6 +61,12 @@ export default class Session {
       }
     }
   }
+
+  async end() {
+    await this._service.logout();
+    await this.refresh();
+  }
+
   /**
    * Creates a common unique key for session storage.
    *
