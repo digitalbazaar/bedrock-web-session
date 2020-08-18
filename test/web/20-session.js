@@ -17,7 +17,8 @@ describe('session API', () => {
     afterEach(async function() {
       await logout({session});
       // this helps cut down on test failures
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should create a session', async () => {
       let err;
@@ -86,7 +87,8 @@ describe('session API', () => {
       // after ending it
       await logout({session, id: sessionId});
       // this is to prevent the ci from consistently failing
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should get a session with data', async () => {
       let err;
@@ -256,7 +258,7 @@ describe('session API', () => {
             }
           });
         });
-        await delay(2000);
+        await delay(mockData.expectedTTL * 2);
         await session.refresh();
         session.should.have.keys([
           'data',

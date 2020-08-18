@@ -14,7 +14,8 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
       // this helps cut down on test failures
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should get a session with no account', async () => {
       let err;
@@ -48,7 +49,8 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
       // this helps cut down on test failures
-      await delay(250);
+      // by waiting for the last test to expire
+      await delay(mockData.expectedTTL + 50);
     });
     it('should get a session with an account', async () => {
       let err = null;
