@@ -34,12 +34,8 @@ config['https-agent'].rejectUnauthorized = false;
 config['account-http'].autoLoginNewAccounts = true;
 
 config.express.session.secret = 'NOTASECRET';
-config.express.session.key = 'web-authn-token-test-session';
-config.express.session.prefix = 'web-authn-token-test';
-// test specific settings
-config.express.session.rolling = true;
-config.express.session.resave = true;
-config.express.session.saveUninitialized = false;
+config.express.session.key = 'bedrock-web-session-test';
+config.express.session.prefix = 'bedrock-web-session-prefix';
 
 // make sessions last 1 second for this test
 config['session-mongodb'].ttl = 1;
