@@ -17,7 +17,7 @@ describe('session API', () => {
     afterEach(async function() {
       await logout({session});
       // this helps cut down on test failures
-      await delay(250);
+      await delay(1050);
     });
     it('should create a session', async () => {
       let err;
