@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-### 1.6.0 - TBD
+### 1.6.0 - 2021-03-29
 
 ### Changed
 - Use `axios@0.21.1`.
