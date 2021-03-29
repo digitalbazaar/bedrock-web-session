@@ -1,5 +1,11 @@
 # bedrock-web-session ChangeLog
 
+### 1.6.0 - TBD
+
+### Changed
+- Use `axios@0.21.1`.
+- Improve test coverage.
+
 ### 1.5.1 - 2020-07-23
 
 ### Fixed
