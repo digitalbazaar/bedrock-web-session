@@ -1,16 +1,10 @@
 # bedrock-web-session ChangeLog
 
-### 1.6.1 - TBD
+### 2.0.0 - TBD
 
 ### Changed
-- Replaced `axios` with `@digitalbazaar/http-client`.
+- **BREAKING**: Replaced `axios` with `@digitalbazaar/http-client`.
 - Changed `SessionService.js` to use http-client instead of `axios`.
-
-### Removed
-- Removed `axios` from the library.
-
-### Added
-- Added `@digitalbazaar/http-client` to the library.
 
 ### 1.6.0 - 2021-03-29
 
