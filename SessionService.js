@@ -1,9 +1,9 @@
 /*!
- * Copyright (c) 2018-2020 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2021 Digital Bazaar, Inc. All rights reserved.
  */
 'use strict';
 
-import axios from 'axios';
+import {httpClient} from '@digitalbazaar/http-client';
 
 export default class SessionService {
   constructor({
@@ -23,7 +23,7 @@ export default class SessionService {
     }
     // store pending session result so concurrent requests will reuse the
     // result instead of spamming the server
-    this._getPending = axios.get(url);
+    this._getPending = httpClient.get(url);
     try {
       const response = await this._getPending;
       return response.data;
@@ -33,7 +33,7 @@ export default class SessionService {
   }
 
   async logout({url = this.config.urls.base} = {}) {
-    await axios.delete(url);
+    await httpClient.delete(url);
     return true;
   }
 }
