@@ -3,7 +3,7 @@
 ### 1.6.1 - TBD
 
 ### Changed
-- Replaced `axios` with `@digitalbazaar/http-client` as we are sunsetting axios.
+- Replaced `axios` with `@digitalbazaar/http-client`.
 - Changed `SessionService.js` to use http-client instead of `axios`.
 
 ### Removed
