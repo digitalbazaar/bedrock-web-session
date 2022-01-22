@@ -124,7 +124,7 @@ describe('session API', () => {
       // this will refresh 3 times over 1 second
       // demonstrating that the session remains authenticated
       // provided we refresh before the session timeout of 1000 ms
-      for(let i = 0; i < 5; ++i) {
+      for(let i = 0; i < 4; ++i) {
         await delay(250);
         await session.refresh();
         session.should.have.keys(['data', '_service', '_eventTypeListeners']);
