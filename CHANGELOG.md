@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-### 3.0.0 - 2022-01-xx
+### 3.0.0 - 2022-01-22
 
 ### Added
 - **BREAKING**: `change` event listeners will now be called when an old
