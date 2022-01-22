@@ -15,17 +15,36 @@ describe('sessionService API', () => {
     });
     it('should get session data with no account', async () => {
       let err;
-      let session = null;
+      let data = null;
       try {
-        session = await sessionService.get();
+        data = await sessionService.get();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
-      should.exist(session);
-      session.should.be.an('object');
+      should.exist(data);
+      data.should.be.an('object');
       // an unauthenticated session has no data
-      session.should.eql({});
+      data.should.eql({});
+    });
+    it('should get the same session data with concurrent calls', async () => {
+      let err;
+      let data1;
+      let data2;
+      try {
+        const promise = sessionService.get();
+        data2 = await sessionService.get();
+        data1 = await promise;
+      } catch(e) {
+        err = e;
+      }
+      should.not.exist(err);
+      should.exist(data1);
+      should.exist(data2);
+      data1.should.be.an('object');
+      // an unauthenticated session has no data
+      data1.should.eql({});
+      data1.should.equal(data2);
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
@@ -43,93 +62,93 @@ describe('sessionService API', () => {
     afterEach(async function() {
       await sessionService.logout();
     });
-    it('should get a session with an account', async () => {
+    it('should get session data with an account', async () => {
       let err = null;
-      let session = null;
+      let data = null;
       try {
-        session = await sessionService.get();
+        data = await sessionService.get();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
-      should.exist(session);
-      session.should.be.an('object');
-      // an authenticated session has an account
-      session.should.have.keys(['account']);
-      session.account.should.be.an('object');
-      session.account.should.have.property('id');
-      session.account.id.should.equal(account.id);
+      should.exist(data);
+      data.should.be.an('object');
+      // an authenticated session data has an account
+      data.should.have.keys(['account']);
+      data.account.should.be.an('object');
+      data.account.should.have.property('id');
+      data.account.id.should.equal(account.id);
     });
     it('should logout a session', async () => {
       let err = null;
-      let session = null;
+      let data = null;
       try {
-        session = await sessionService.get();
+        data = await sessionService.get();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
-      should.exist(session);
-      session.should.be.an('object');
-      // an authenticated session has an account
-      session.should.have.keys(['account']);
-      session.account.should.be.an('object');
-      session.account.should.have.property('id');
-      session.account.id.should.equal(account.id);
+      should.exist(data);
+      data.should.be.an('object');
+      // an authenticated session data has an account
+      data.should.have.keys(['account']);
+      data.account.should.be.an('object');
+      data.account.should.have.property('id');
+      data.account.id.should.equal(account.id);
       await sessionService.logout();
-      session = await sessionService.get();
-      // an unauthenticated session has no data
-      session.should.eql({});
+      data = await sessionService.get();
+      // an unauthenticated session data is empty
+      data.should.eql({});
     });
     it('should expire after 1 second', async function() {
       let err = null;
-      let session = null;
+      let data = null;
       try {
-        session = await sessionService.get();
+        data = await sessionService.get();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
-      should.exist(session);
-      session.should.be.an('object');
-      // an authenticated session has an account
-      session.should.have.keys(['account']);
-      session.account.should.be.an('object');
-      session.account.should.have.property('id');
-      session.account.id.should.equal(account.id);
+      should.exist(data);
+      data.should.be.an('object');
+      // an authenticated session data has an account
+      data.should.have.keys(['account']);
+      data.account.should.be.an('object');
+      data.account.should.have.property('id');
+      data.account.id.should.equal(account.id);
       // wait at least 1 second to expire session
       await delay(1000);
-      session = await sessionService.get();
-      // an unauthenticated session has no data
-      session.should.eql({});
+      data = await sessionService.get();
+      // an unauthenticated session data is empty
+      data.should.eql({});
     });
     it('should refresh on get', async function() {
       let err = null;
-      let session = null;
+      let data = null;
       try {
-        session = await sessionService.get();
+        data = await sessionService.get();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
-      should.exist(session);
-      session.should.be.an('object');
-      // an authenticated session has an account
-      session.should.have.keys(['account']);
-      session.account.should.be.an('object');
-      session.account.should.have.property('id');
-      session.account.id.should.equal(account.id);
-      // this will refresh 4 times over 2 seconds
+      should.exist(data);
+      data.should.be.an('object');
+      // an authenticated session data has an account
+      data.should.have.keys(['account']);
+      data.account.should.be.an('object');
+      data.account.should.have.property('id');
+      data.account.id.should.equal(account.id);
+      // this will refresh 3 times over 1 seconds
       // demonstrating that the session remains authenticated
       // provided we refresh before the session times out after 1000 ms
-      for(let i = 0; i < 5; i++) {
+      for(let i = 0; i < 4; i++) {
         await delay(250);
-        session = await sessionService.get();
-        // an authenticated session has an account
-        session.should.have.keys(['account']);
-        session.account.should.be.an('object');
-        session.account.should.have.property('id');
-        session.account.id.should.equal(account.id);
+        data = await sessionService.get();
+        // an authenticated session data has an account
+        data.should.have.keys(['account']);
+        data.account.should.be.an('object');
+        data.account.should.have.property('id');
+        data.account.id.should.equal(account.id);
       }
     });
   }); // end authenticated request
