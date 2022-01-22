@@ -1,48 +1,31 @@
 /*!
- * Copyright (c) 2019-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-
+import {createSession, session, _setSession} from 'bedrock-web-session';
 import delay from 'delay';
-import {spy, match} from 'sinon';
-import {createSession, getSession} from 'bedrock-web-session';
-import {login, createAccount, store, logout} from './helpers.js';
-import mockData from './mock-data.js';
+import {login, logout, createAccount} from './helpers.js';
+import {mockData} from './mockData.js';
 
 describe('session API', () => {
   describe('unauthenticated request', () => {
-    let session;
     beforeEach(function() {
-      session = null;
+      _setSession({newSession: null});
     });
     afterEach(async function() {
-      await logout({session});
-      // this helps cut down on test failures
-      await delay(1050);
+      await logout();
     });
-    it('should create a session', async () => {
+    it('should create the session singleton', async () => {
       let err;
+      let s;
       try {
-        session = await createSession({id: 'create-unauth-session', store});
+        s = await createSession();
       } catch(e) {
         err = e;
       }
       should.not.exist(err);
+      should.exist(s);
       should.exist(session);
-      session.should.be.an('object');
-      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
-      session.data.should.be.an('object');
-      // an unauthenticated session has no data
-      session.data.should.eql({});
-    });
-    it('should get a session with no data', async () => {
-      let err;
-      try {
-        session = await getSession({id: 'get-unauth-session', store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
-      should.exist(session);
+      session.should.equal(s);
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
       session.data.should.be.an('object');
@@ -50,55 +33,35 @@ describe('session API', () => {
       session.data.should.eql({});
     });
   }); // end unauthenticated request
+
   describe('authenticated request', () => {
-    const {email, password} = mockData.accounts.session;
-    let session = null;
+    const {email, password} = mockData.accounts.bob;
     let account = null;
     let totp = null;
-    // all tests will use the same session id
-    const sessionId = 'auth-session-tests';
     before(async function() {
-      await logout({session});
+      await logout();
       ({account, totp} = await createAccount({email, password}));
     });
     beforeEach(async function() {
-      session = null;
+      _setSession({newSession: null});
+      await createSession();
       await login({email, password, totp});
+      await session.refresh();
     });
     afterEach(async function() {
-      // this will delete the session from the store
-      // after ending it
-      await logout({session, id: sessionId});
-      // this is to prevent the ci from consistently failing
-      await delay(250);
+      await logout();
     });
-    it('should get a session with data', async () => {
-      let err;
-      try {
-        session = await getSession({id: sessionId, store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
-      should.exist(session);
+    it('should confirm session has account data', async () => {
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
       session.data.should.be.an('object');
-      // an authenticated session has data
+      // an authenticated session has account data
       session.data.should.have.keys(['account']);
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
     });
-    it('should logout a session', async () => {
-      let err;
-      try {
-        session = await getSession({id: sessionId, store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
-      should.exist(session);
+    it('should end a session', async () => {
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
       session.data.should.be.an('object');
@@ -109,16 +72,10 @@ describe('session API', () => {
       should.exist(session.end);
       await session.end();
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      // data should now be empty
       session.data.should.eql({});
     });
     it('should expire after 1 second', async function() {
-      let err;
-      try {
-        session = await getSession({id: sessionId, store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
@@ -134,13 +91,6 @@ describe('session API', () => {
       session.data.should.eql({});
     });
     it('should refresh', async function() {
-      let err;
-      try {
-        session = await getSession({id: sessionId, store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
@@ -149,10 +99,10 @@ describe('session API', () => {
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
-      // this will refresh 4 times over 2 seconds
+      // this will refresh 3 times over 1 second
       // demonstrating that the session remains authenticated
       // provided we refresh before the session timeout of 1000 ms
-      for(let i = 0; i < 5; i++) {
+      for(let i = 0; i < 5; ++i) {
         await delay(250);
         await session.refresh();
         session.should.have.keys(['data', '_service', '_eventTypeListeners']);
@@ -163,51 +113,39 @@ describe('session API', () => {
         session.data.account.id.should.equal(account.id);
       }
     });
-    it('should emit change event on refresh when session expired',
-      async function() {
-        let err;
-        try {
-          session = await getSession({id: sessionId, store});
-        } catch(e) {
-          err = e;
-        }
-        should.not.exist(err);
-        should.exist(session);
-        session.should.be.an('object');
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
-        session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
-        session.data.account.should.be.an('object');
-        session.data.account.should.have.property('id');
-        session.data.account.id.should.equal(account.id);
-        const changeEvent = new Promise((resolve, reject) => {
-          session.on('change', ({authentication, oldData, newData}) => {
-            try {
-              should.not.exist(authentication);
-              should.exist(oldData);
-              should.exist(newData);
-              oldData.should.not.eql(newData);
-              resolve();
-            } catch(e) {
-              reject(e);
-            }
-          });
+    it('should emit change event on refresh when session expired', async () => {
+      should.exist(session);
+      session.should.be.an('object');
+      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      session.data.should.be.an('object');
+      session.data.should.have.keys(['account']);
+      session.data.account.should.be.an('object');
+      session.data.account.should.have.property('id');
+      session.data.account.id.should.equal(account.id);
+      let changed = false;
+      const remove = session.on(
+        'change', async ({oldEnded, oldData, newData}) => {
+          should.exist(oldEnded);
+          should.exist(oldData);
+          should.exist(newData);
+          oldData.should.not.eql(newData);
+          // `oldEnded` is not set to true unless `end` is called; it is not
+          // set when a session merely expires, other information in `data` will
+          // need to be used to determine what behavior a `change` listener
+          // will take
+          oldEnded.should.eql(false);
+          changed = true;
+          remove();
         });
-        await delay(2000);
-        await session.refresh();
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
-        // an unauthenticated session has no data
-        session.data.should.eql({});
-        await changeEvent;
-      });
+      await delay(2000);
+      await session.refresh();
+      session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      // an unauthenticated session has no data
+      session.data.should.eql({});
+      // change listener should have been called
+      changed.should.eql(true);
+    });
     it('should emit change event on session.end', async function() {
-      let err;
-      try {
-        session = await getSession({id: sessionId, store});
-      } catch(e) {
-        err = e;
-      }
-      should.not.exist(err);
       should.exist(session);
       session.should.be.an('object');
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
@@ -217,63 +155,23 @@ describe('session API', () => {
       session.data.account.should.be.an('object');
       session.data.account.should.have.property('id');
       session.data.account.id.should.equal(account.id);
-      const changeEvent = new Promise((resolve, reject) => {
-        session.on('change', ({authentication, oldData, newData}) => {
-          try {
-            should.not.exist(authentication);
-            should.exist(oldData);
-            should.exist(newData);
-            oldData.should.not.eql(newData);
-            resolve();
-          } catch(e) {
-            reject(e);
-          }
+      let changed = false;
+      const remove = session.on(
+        'change', async ({oldEnded, oldData, newData}) => {
+          should.exist(oldEnded);
+          should.exist(oldData);
+          should.exist(newData);
+          oldData.should.not.eql(newData);
+          oldEnded.should.eql(true);
+          changed = true;
+          remove();
         });
-      });
       await session.end();
       session.should.have.keys(['data', '_service', '_eventTypeListeners']);
+      // data should now be empty
       session.data.should.eql({});
-      await changeEvent;
+      // change listener should have been called
+      changed.should.eql(true);
     });
-    it('should emit change event if authentication passed to refresh',
-      async function() {
-        const expectedAuth = {foo: true};
-        let err;
-        try {
-          session = await getSession({id: sessionId, store});
-        } catch(e) {
-          err = e;
-        }
-        should.not.exist(err);
-        should.exist(session);
-        session.should.be.an('object');
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
-        session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
-        session.data.account.should.be.an('object');
-        session.data.account.should.have.property('id');
-        session.data.account.id.should.equal(account.id);
-        let authSpy = null;
-        const changeEvent = new Promise((resolve, reject) => {
-          authSpy = spy(() => {
-            try {
-              resolve();
-            } catch(e) {
-              reject(e);
-            }
-          });
-          session.on('change', authSpy);
-        });
-        await session.refresh({authentication: expectedAuth});
-        session.should.have.keys(['data', '_service', '_eventTypeListeners']);
-        session.data.should.be.an('object');
-        session.data.should.have.keys(['account']);
-        await changeEvent;
-        authSpy.withArgs({
-          authentication: expectedAuth,
-          oldData: match.object,
-          newData: match.object
-        }).calledOnce.should.equal(true);
-      });
   }); // end authenticated request
 });

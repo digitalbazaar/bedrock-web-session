@@ -1,53 +1,33 @@
 /*!
- * Copyright (c) 2018-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import {Session} from './Session.js';
+import {SessionService} from './SessionService.js';
 
-import {store as defaultStore} from 'bedrock-web-store';
-import Session from './Session.js';
+export {Session, SessionService};
 
-export {default as SessionService} from './SessionService.js';
-
-/**
- * Creates a Session with an optional id or store.
- *
- * @param {object} [options={}] - Options to use.
- * @param {string} [options.id='session.default'] - An id for the session.
- * @param {object} [options.store=defaultStore] - A store for the session.
- *
- * @returns {Promise<object>} The created session.
-*/
-export const createSession = async (
-  {id = 'session.default', store = defaultStore} = {}) => {
-  const session = new Session();
-  await store.create({id, object: session});
-  return session;
-};
+// must be created via `createSession`
+export let session;
 
 /**
- * Gets a session from a store or creates a new session.
+ * Creates the singleton Session instance for a Web app. This should only
+ * be called once in a given Web app.
  *
  * @param {object} [options={}] - Options to use.
- * @param {string} [options.id='session.default'] - An id for the session.
- * @param {object} [options.store=defaultStore] - A store for the session.
+ * @param {SessionService} [options.sessionService] - An optional
+ *   SessionService instance for the session to use; a default one will be
+ *   constructed otherwise.
  *
- * @returns {Promise<object>} A session.
-*/
-export const getSession = async (
-  {id = 'session.default', store = defaultStore} = {}) => {
-  const session = await store.get({id});
+ * @returns {Promise<Session>} The created session.
+ */
+export async function createSession({sessionService} = {}) {
   if(session) {
-    return session;
+    throw new Error('Session singleton already created.');
   }
-  try {
-    // use the passed in id and store
-    const session = await createSession({id, store});
-    await session.refresh();
-    return session;
-  } catch(e) {
-    if(e.name === 'DuplicateError') {
-      return store.get({id});
-    }
-    throw e;
-  }
-};
+  return session = new Session({sessionService});
+}
+
+// exported for test purposes
+export async function _setSession({newSession} = {}) {
+  session = newSession;
+}
