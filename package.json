@@ -1,6 +1,6 @@
 {
   "name": "bedrock-web-session",
-  "version": "3.0.0",
+  "version": "3.0.1-0",
   "description": "Session management for Bedrock Web Apps",
   "module": "main.js",
   "scripts": {
