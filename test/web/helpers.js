@@ -22,7 +22,9 @@ export async function login({email, password, totp}) {
 
 export async function logout() {
   if(session) {
-    await session.end();
+    try {
+      await session.end();
+    } finally {}
   }
 }
 
