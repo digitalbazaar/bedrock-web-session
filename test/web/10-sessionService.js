@@ -1,11 +1,10 @@
 /*!
- * Copyright (c) 2019-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-
 import delay from 'delay';
-import {SessionService} from 'bedrock-web-session';
 import {login, createAccount} from './helpers.js';
-import mockData from './mock-data.js';
+import {mockData} from './mockData.js';
+import {SessionService} from 'bedrock-web-session';
 
 const sessionService = new SessionService();
 
@@ -13,10 +12,8 @@ describe('sessionService API', () => {
   describe('unauthenticated request', () => {
     afterEach(async function() {
       await sessionService.logout();
-      // this helps cut down on test failures
-      await delay(250);
     });
-    it('should get a session with no account', async () => {
+    it('should get session data with no account', async () => {
       let err;
       let session = null;
       try {
@@ -32,7 +29,7 @@ describe('sessionService API', () => {
     });
   }); // end unauthenticated request
   describe('authenticated request', () => {
-    const {email, password} = mockData.accounts.sessionService;
+    const {email, password} = mockData.accounts.alice;
     let account = null;
     let totp = null;
     before(async function() {
@@ -45,8 +42,6 @@ describe('sessionService API', () => {
     });
     afterEach(async function() {
       await sessionService.logout();
-      // this helps cut down on test failures
-      await delay(250);
     });
     it('should get a session with an account', async () => {
       let err = null;
@@ -102,7 +97,8 @@ describe('sessionService API', () => {
       session.account.should.be.an('object');
       session.account.should.have.property('id');
       session.account.id.should.equal(account.id);
-      await delay(2000);
+      // wait at least 1 second to expire session
+      await delay(1000);
       session = await sessionService.get();
       // an unauthenticated session has no data
       session.should.eql({});

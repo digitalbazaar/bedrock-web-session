@@ -1,6 +1,8 @@
 /*!
- * Copyright (c) 2019-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
+'use strict';
+
 const bedrock = require('bedrock');
 require('bedrock-mongodb');
 require('bedrock-express');

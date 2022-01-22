@@ -1,23 +1,13 @@
 /*!
- * Copyright (c) 2019-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-
+import {authenticator} from 'otplib';
 import {TokenService} from 'bedrock-web-authn-token';
 import {AccountService} from 'bedrock-web-account';
-import {authenticator} from 'otplib';
-import {MemoryEngine} from 'bedrock-web-store';
+import {session} from 'bedrock-web-session';
 
-export const store = new MemoryEngine();
 const tokenService = new TokenService();
 const accountService = new AccountService();
-
-// safely ends a session & removes from it from the store.
-export async function logout({session, id} = {}) {
-  if(session && session.end) {
-    await session.end();
-  }
-  return store.delete({id});
-}
 
 export async function login({email, password, totp}) {
   const authResults = {};
@@ -30,10 +20,16 @@ export async function login({email, password, totp}) {
   return authResults;
 }
 
+export async function logout() {
+  if(session) {
+    await session.end();
+  }
+}
+
 export async function createAccount({
   email,
   password,
-  short_name = 'session-test'
+  serviceId = 'session-test'
 }) {
   // check to make sure the account does not already exist.
   const exists = await accountService.exists({email});
@@ -56,14 +52,14 @@ export async function createAccount({
     account: account.id,
     type: 'totp',
     authenticationMethod: 'totp-test-challenge',
-    serviceId: short_name
+    serviceId
   });
   await tokenService.create({
     account: account.id,
     type: 'password',
     password,
     authenticationMethod: 'password-test',
-    serviceId: short_name
+    serviceId
   });
   return {account, totp};
 }

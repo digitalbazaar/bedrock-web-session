@@ -1,53 +1,39 @@
 /*!
- * Copyright (c) 2018-2021 Digital Bazaar, Inc. All rights reserved.
+ * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import {SessionService} from './SessionService.js';
 
-import SessionService from './SessionService.js';
-
-export default class Session {
-  constructor() {
+export class Session {
+  constructor({sessionService = new SessionService()} = {}) {
     this.data = {};
-    this._service = new SessionService();
+    this._service = sessionService;
     this._eventTypeListeners = new Map([['change', new Set()]]);
   }
 
   /**
-   * Refreshes this session instance by retrieving new session data via the
-   * session service. When the session has been explicitly changed, by
-   * logging a user into a server, the caller may optionally supply
-   * authentication information that can be used by `change` listeners. If
-   * `authentication` is passed or if the refresh causes the session data
-   * to change, then a `change` event is emitted.
+   * Refreshes this session instance by retrieving session data via the
+   * session service. If the retrieved session data is different from the
+   * cached session data, then a `change` event will be emitted to all
+   * `change` listeners.
    *
-   * @param {object} options - The options to use.
-   * @param {object} [options.authentication] - Authentication information to
-   *  pass to change listeners.
+   * @returns {Promise} Settles once the operation completes.
    */
-  async refresh({authentication} = {}) {
-    const oldData = this.data;
-    const newData = await this._service.get();
-    // issue change event when new authentication is used or when
-    // session data changes
-    if(authentication || !deepEqual(oldData, newData)) {
-      this.data = newData;
-      try {
-        await this._emit('change', {authentication, oldData, newData});
-      } catch(e) {
-        // could not refresh session, so end it
-        const error = e;
-        try {
-          await this.end();
-        } finally {
-          throw error;
-        }
-      }
-    }
+  async refresh() {
+    return this._refresh();
   }
 
+  /**
+   * Ends the current session by using the session service to logout and then
+   * refreshing the session's internal state so it represents a new session. A
+   * `change` event will be emitted to all `change` listeners (whether or not
+   * the session data is different) with the `oldEnded` property on the event
+   * set to `true`.
+   *
+   * @returns {Promise} Settles once the session ends.
+   */
   async end() {
     await this._service.logout();
-    await this.refresh();
+    await this._refresh({oldEnded: true});
   }
 
   /**
@@ -85,8 +71,34 @@ export default class Session {
       await handler(eventData);
     }
   }
+
+  async _refresh({oldEnded = false} = {}) {
+    const oldData = this.data;
+    const newData = await this._service.get();
+
+    // if old session did not end nor did data change, then return early
+    if(!oldEnded && _deepEqual(oldData, newData)) {
+      return;
+    }
+
+    // the session is new or changed; notify change listeners
+    this.data = newData;
+    try {
+      await this._emit('change', {oldEnded, oldData, newData});
+    } catch(e) {
+      // could not refresh session, so end it if not already ended
+      const error = e;
+      try {
+        if(!oldEnded) {
+          await this.end();
+        }
+      } finally {
+        throw error;
+      }
+    }
+  }
 }
 
-function deepEqual(a, b) {
+function _deepEqual(a, b) {
   return JSON.stringify(a) === JSON.stringify(b);
 }
