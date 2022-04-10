@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-## 4.0.0 - 2022-04-xx
+## 4.0.0 - 2022-04-10
 
 ### Changed
 - **BREAKING**: Rename package to `@bedrock/web-session`.
