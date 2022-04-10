@@ -1,8 +1,9 @@
 {
-  "name": "bedrock-web-session",
+  "name": "@bedrock/web-session",
   "version": "3.0.1-0",
+  "type": "module",
   "description": "Session management for Bedrock Web Apps",
-  "module": "main.js",
+  "module": "./lib/index.js",
   "scripts": {
     "lint": "eslint ."
   },
@@ -13,9 +14,14 @@
     "type": "git",
     "url": "https://github.com/digitalbazaar/bedrock-web-session"
   },
+  "files": [
+    "lib/*"
+  ],
   "devDependencies": {
     "eslint": "^7.32.0",
     "eslint-config-digitalbazaar": "^2.8.0",
-    "eslint-plugin-jsdoc": "^37.6.3"
+    "eslint-plugin-jsdoc": "^37.9.7",
+    "jsdoc": "^3.6.4",
+    "jsdoc-to-markdown": "^7.1.1"
   }
 }

@@ -1,5 +1,11 @@
 # bedrock-web-session ChangeLog
 
+## 4.0.0 - 2022-04-xx
+
+### Changed
+- **BREAKING**: Rename package to `@bedrock/web-session`.
+- **BREAKING**: Convert to module (ESM).
+
 ### 3.0.0 - 2022-01-22
 
 ### Added

@@ -4,7 +4,7 @@
 import delay from 'delay';
 import {login, createAccount} from './helpers.js';
 import {mockData} from './mockData.js';
-import {SessionService} from 'bedrock-web-session';
+import {SessionService} from '@bedrock/web-session';
 
 const sessionService = new SessionService();
 

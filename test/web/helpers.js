@@ -2,9 +2,9 @@
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import {authenticator} from 'otplib';
-import {TokenService} from 'bedrock-web-authn-token';
-import {AccountService} from 'bedrock-web-account';
-import {session} from 'bedrock-web-session';
+import {AccountService} from '@bedrock/web-account';
+import {session} from '@bedrock/web-session';
+import {TokenService} from '@bedrock/web-authn-token';
 
 const tokenService = new TokenService();
 const accountService = new AccountService();
