@@ -1,22 +1,19 @@
 /*!
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import * as bedrock from '@bedrock/core';
+import '@bedrock/security-context';
+import '@bedrock/account';
+import '@bedrock/account-http';
+import '@bedrock/express';
+import '@bedrock/https-agent';
+import '@bedrock/mongodb';
+import '@bedrock/session-http';
+import '@bedrock/session-mongodb';
+import '@bedrock/authn-token';
+import '@bedrock/authn-token-http';
 
-const bedrock = require('bedrock');
-require('bedrock-mongodb');
-require('bedrock-express');
-require('bedrock-session-http');
-// note: this is the only backend we currently
-// have for sessions.
-require('bedrock-session-mongodb');
-require('bedrock-authn-token');
-require('bedrock-authn-token-http');
-require('bedrock-account');
-require('bedrock-account-http');
-require('bedrock-https-agent');
-require('bedrock-security-context');
-require('bedrock-test');
-require('bedrock-karma');
+import '@bedrock/test';
+import '@bedrock/karma';
 
 bedrock.start();

@@ -1,14 +1,16 @@
 /*!
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-'use strict';
+import {config} from '@bedrock/core';
+import path from 'path';
+import '@bedrock/https-agent';
+import '@bedrock/karma';
+import '@bedrock/mongodb';
+import '@bedrock/account-http';
+import '@bedrock/express';
+import '@bedrock/session-mongodb';
 
-const {config} = require('bedrock');
-const path = require('path');
-
-const {permissions, roles} = config.permission;
-
-config.karma.suites['bedrock-web'] = path.join('web', '**', '*.js');
+config.karma.suites['bedrock-web-session'] = path.join('web', '**', '*.js');
 
 // only allow 1 browser window for these tests to reduce flakiness
 config.karma.config.concurrency = 1;
@@ -39,14 +41,3 @@ config.express.session.prefix = 'bedrock-web-session-prefix';
 
 // make sessions last 1 second for this test
 config['session-mongodb'].ttl = 1;
-
-roles['account.registered'] = {
-  id: 'account.registered',
-  label: 'Account Test Role',
-  comment: 'Role for Test User',
-  sysPermission: [
-    permissions.ACCOUNT_ACCESS.id,
-    permissions.ACCOUNT_UPDATE.id,
-    permissions.ACCOUNT_INSERT.id
-  ]
-};
