@@ -38,7 +38,7 @@ export async function createAccount({
   if(exists) {
     // if the account exists throw an error
     const duplicateError = new Error(
-      `An account with the email ${email} was already created}`);
+      `An account with the email ${email} was already created.`);
     duplicateError.name = 'DuplicateError';
     throw duplicateError;
   }

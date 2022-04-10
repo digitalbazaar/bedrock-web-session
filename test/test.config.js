@@ -38,6 +38,7 @@ config['account-http'].autoLoginNewAccounts = true;
 config.express.session.secret = 'NOTASECRET';
 config.express.session.key = 'bedrock-web-session-test';
 config.express.session.prefix = 'bedrock-web-session-prefix';
+config.express.useSession = true;
 
 // make sessions last 1 second for this test
 config['session-mongodb'].ttl = 1;
