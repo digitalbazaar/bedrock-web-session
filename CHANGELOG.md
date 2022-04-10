@@ -1,6 +1,6 @@
 # bedrock-web-session ChangeLog
 
-## 4.0.1 - 2022-04-xx
+## 4.0.1 - 2022-04-10
 
 ### Fixed
 - Fix test suite.
