@@ -2,6 +2,7 @@
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
 import {config} from '@bedrock/core';
+import {createRequire} from 'module';
 import path from 'path';
 import '@bedrock/https-agent';
 import '@bedrock/karma';
@@ -9,6 +10,20 @@ import '@bedrock/mongodb';
 import '@bedrock/account-http';
 import '@bedrock/express';
 import '@bedrock/session-mongodb';
+import webpack from 'webpack';
+
+const require = createRequire(import.meta.url);
+
+// polyfills for otplib and bcryptjs
+config.karma.config.webpack.resolve.fallback.stream =
+  require.resolve('stream-browserify');
+config.karma.config.webpack.resolve.fallback.crypto =
+  require.resolve('crypto-browserify');
+config.karma.config.webpack.resolve.fallback.Buffer =
+  require.resolve('buffer/');
+config.karma.config.webpack.plugins.push(new webpack.ProvidePlugin({
+  Buffer: ['buffer', 'Buffer']
+}));
 
 config.karma.suites['bedrock-web-session'] = path.join('web', '**', '*.js');
 
