@@ -1,8 +1,8 @@
 /*!
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
+import * as _totp from '@digitalbazaar/totp';
 import {AccountService} from '@bedrock/web-account';
-import {authenticator} from 'otplib';
 import {session} from '@bedrock/web-session';
 import {TokenService} from '@bedrock/web-authn-token';
 
@@ -11,7 +11,7 @@ const accountService = new AccountService();
 
 export async function login({email, password, totp}) {
   const authResults = {};
-  const challenge = authenticator.generate(totp.secret);
+  const {token: challenge} = await _totp.generateToken({secret: totp.secret});
   authResults.totp = await tokenService.authenticate(
     {type: 'totp', email, challenge});
   authResults.password = await tokenService.authenticate(
