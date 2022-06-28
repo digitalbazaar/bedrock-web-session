@@ -4,13 +4,13 @@
 import {config} from '@bedrock/core';
 import {createRequire} from 'module';
 import path from 'path';
+import webpack from 'webpack';
 import '@bedrock/https-agent';
 import '@bedrock/karma';
 import '@bedrock/mongodb';
 import '@bedrock/account-http';
 import '@bedrock/express';
 import '@bedrock/session-mongodb';
-import webpack from 'webpack';
 
 const require = createRequire(import.meta.url);
 
