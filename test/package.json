@@ -12,8 +12,8 @@
   "dependencies": {
     "@bedrock/account": "^8.0.0",
     "@bedrock/account-http": "^6.0.0",
-    "@bedrock/authn-token": "^9.0.0",
-    "@bedrock/authn-token-http": "^6.0.0",
+    "@bedrock/authn-token": "^10.2.0",
+    "@bedrock/authn-token-http": "^7.0.2",
     "@bedrock/core": "^6.0.1",
     "@bedrock/express": "^8.0.0",
     "@bedrock/https-agent": "^4.0.0",
@@ -25,16 +25,16 @@
     "@bedrock/server": "^5.0.0",
     "@bedrock/session-http": "^5.0.0",
     "@bedrock/session-mongodb": "^6.0.0",
-    "@bedrock/test": "^8.0.3",
+    "@bedrock/test": "^8.0.5",
     "@bedrock/validation": "^7.0.0",
-    "@bedrock/web-account": "^3.0.2",
-    "@bedrock/web-authn-token": "^3.0.0",
+    "@bedrock/web-account": "github:digitalbazaar/bedrock-web-account#updates",
+    "@bedrock/web-authn-token": "github:digitalbazaar/bedrock-web-authn-token#convert-to-module",
     "@bedrock/web-session": "file:..",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "delay": "^5.0.0",
     "otplib": "^12.0.1",
     "stream-browserify": "^3.0.0",
-    "webpack": "^5.72.1"
+    "webpack": "^5.73.0"
   }
 }
