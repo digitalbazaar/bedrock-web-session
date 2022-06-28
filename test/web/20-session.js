@@ -1,9 +1,9 @@
 /*!
  * Copyright (c) 2018-2022 Digital Bazaar, Inc. All rights reserved.
  */
-import {createSession, session, _setSession} from '@bedrock/web-session';
+import {_setSession, createSession, session} from '@bedrock/web-session';
+import {createAccount, login, logout} from './helpers.js';
 import delay from 'delay';
-import {login, logout, createAccount} from './helpers.js';
 import {mockData} from './mockData.js';
 
 describe('session API', () => {
