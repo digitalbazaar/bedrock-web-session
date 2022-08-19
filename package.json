@@ -1,6 +1,6 @@
 {
   "name": "@bedrock/web-session",
-  "version": "5.0.0",
+  "version": "5.0.1-0",
   "description": "Session management for Bedrock Web Apps",
   "type": "module",
   "exports": "./lib/index.js",
