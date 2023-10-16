@@ -1,5 +1,11 @@
 # bedrock-web-session ChangeLog
 
+## 6.0.0 - 2022-10-TBD
+
+### Changed
+- **BREAKING**: Drop support for Node.js < 18.
+- Use `@digitalbazaar/http-client@4.0`. Requires Node.js 18+.
+
 ## 5.0.0 - 2022-08-19
 
 ### Changed
